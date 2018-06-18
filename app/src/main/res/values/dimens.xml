@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_view_12sp">12sp</dimen>
+    <dimen name="text_view_14sp">14sp</dimen>
+    <dimen name="text_view_16sp">16sp</dimen>
+    <dimen name="text_view_20sp">20sp</dimen>
+    <dimen name="text_view_24sp">24sp</dimen>
+    <dimen name="text_view_34sp">34sp</dimen>
+    <dimen name="text_view_60sp">60sp</dimen>
+
+    <dimen name="bottom_nav_elevation">8dp</dimen>
+    <dimen name="fab_elevation">6dp</dimen>
+    <dimen name="appbar_elevation">4dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
+
+    <dimen name="no_margin">0dp</dimen>
+    <dimen name="activity_margin">16dp</dimen>
+    <dimen name="childView_margin">8dp</dimen>
+    <dimen name="mini_fab_margin">23dp</dimen>
+    <dimen name="md_icon_button_margin">48dp</dimen>
+
+    <dimen name="dp_55">55dp</dimen>
+    <dimen name="dp_100">100dp</dimen>
+    <dimen name="dp_145">145dp</dimen>
+
+    <dimen name="drop_down_offset">4dp</dimen>
+    <dimen name="drop_down_offset_neg">-4dp</dimen>
+    <dimen name="card_corner_radius">2dp</dimen>
+
+</resources>

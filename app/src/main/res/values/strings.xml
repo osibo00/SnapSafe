@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">ContentVault</string>
+    <string name="new_album_name">Enter Album Name</string>
+    <string name="album_dialog_title">New Album</string>
+    <string name="album_dialog_message">Create new album from selected?</string>
+    <string name="positive_btn_create">CREATE</string>
+    <string name="album_dialog_empty">Field cannot be empty.</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="delete_dialog_message">Delete selected item(s)?</string>
+    <string name="dialog_yes">YES</string>
+    <string name="dialog_no">NO</string>
+    <string name="sort_from_oldest_to_newest">From Oldest to Newest</string>
+    <string name="sort_from_newest_to_oldest">From Newest to Oldest</string>
+    <string name="sort_by_album">By Album Name</string>
+    <string name="user_album_photo">Content Album Photo</string>
+    <string name="create_album">Create Album</string>
+    <string name="create_new_album">Create New Album</string>
+    <string name="create_dialog_exists_error">Album %s already exists.</string>
+    <string name="enter_album_tags">Include Tags (Optional)</string>
+    <string name="detail_photo">Detail Photo</string>
+    <string name="select">Select Content</string>
+    <string name="import_photos">Add to Vault</string>
+    <string name="move_photos">Move Content</string>
+    <string name="items_selected">\u0020Selected</string>
+    <string name="photovault_image">PhotoVault Image</string>
+    <string name="photos">Photos</string>
+    <string name="albums">Albums</string>
+    <string name="search">Search</string>
+    <string name="favorites">Favorites</string>
+</resources>

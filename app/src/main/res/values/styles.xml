@@ -1,0 +1,95 @@
+<resources>
+
+    <style name="AppTheme" parent="AppTheme.NoToolbar" />
+
+    <!-- Base application theme. -->
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoToolbar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/colorSurface</item>
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="android:windowEnterTransition">@android:transition/slide_right</item>
+        <item name="android:windowExitTransition">@android:transition/slide_left</item>
+        <item name="coordinatorLayoutStyle">@style/Widget.Design.CoordinatorLayout</item>
+        <item name="popupMenuStyle">@style/PopupMenuStyle</item>
+        <item name="textAppearanceSmallPopupMenu">@style/PopupTextSmall</item>
+        <item name="textAppearanceLargePopupMenu">@style/PopupTextLarge</item>
+    </style>
+
+    <style name="PopupMenuStyle" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:dropDownHorizontalOffset">@dimen/drop_down_offset_neg</item>
+        <item name="android:dropDownVerticalOffset">@dimen/drop_down_offset</item>
+    </style>
+
+    <style name="PopupTextLarge" parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Large">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/md_blacktext_medium_emphasis</item>
+        <item name="android:textSize">@dimen/text_view_16sp</item>
+    </style>
+
+    <style name="PopupTextSmall" parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/md_blacktext_medium_emphasis</item>
+        <item name="android:textSize">@dimen/text_view_14sp</item>
+    </style>
+
+    <style name="action_toolbar_button" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:tint">@color/md_inactive_nav</item>
+    </style>
+
+    <style name="FontHeading20sp" parent="@android:style/TextAppearance">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/md_blacktext_high_emphasis</item>
+        <item name="android:textSize">@dimen/text_view_20sp</item>
+    </style>
+
+    <style name="FontHeading24sp" parent="@android:style/TextAppearance">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/md_blacktext_high_emphasis</item>
+        <item name="android:textSize">@dimen/text_view_20sp</item>
+    </style>
+
+    <style name="FontBody16sp" parent="@android:style/TextAppearance">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/md_blacktext_medium_emphasis</item>
+        <item name="android:textSize">@dimen/text_view_16sp</item>
+    </style>
+
+    <style name="FontBody14sp" parent="@android:style/TextAppearance">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/md_blacktext_medium_emphasis</item>
+        <item name="android:textSize">@dimen/text_view_14sp</item>
+    </style>
+
+    <style name="FontButton14sp" parent="@android:style/TextAppearance">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/md_blacktext_high_emphasis</item>
+        <item name="android:textSize">@dimen/text_view_14sp</item>
+    </style>
+
+    <style name="FontOverline12sp" parent="@android:style/TextAppearance">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/md_blacktext_medium_emphasis</item>
+        <item name="android:textSize">@dimen/text_view_12sp</item>
+    </style>
+
+</resources>

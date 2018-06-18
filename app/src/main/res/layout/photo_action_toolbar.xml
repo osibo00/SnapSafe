@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<productions.darthplagueis.weathersafe.view.layouts.ActionToolbarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:layout_height="?android:attr/actionBarSize">
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/close_btn"
+        style="@style/action_toolbar_button"
+        android:layout_width="@dimen/md_icon_button_margin"
+        android:layout_height="@dimen/md_icon_button_margin"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_close_black_24dp" />
+
+    <TextView
+        android:id="@+id/utilBar_text"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="start|center_vertical"
+        android:textAppearance="@style/FontHeading20sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/delete_btn"
+        app:layout_constraintStart_toEndOf="@id/close_btn"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/app_name" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/delete_btn"
+        style="@style/action_toolbar_button"
+        android:layout_width="@dimen/md_icon_button_margin"
+        android:layout_height="@dimen/md_icon_button_margin"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/copy_btn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_delete_black_24dp" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/copy_btn"
+        style="@style/action_toolbar_button"
+        android:layout_width="@dimen/md_icon_button_margin"
+        android:layout_height="@dimen/md_icon_button_margin"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/create_folder_btn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_launcher_round" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/create_folder_btn"
+        style="@style/action_toolbar_button"
+        android:layout_width="@dimen/md_icon_button_margin"
+        android:layout_height="@dimen/md_icon_button_margin"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_create_new_folder_black_24dp" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/search_btn"
+        style="@style/action_toolbar_button"
+        android:layout_width="@dimen/md_icon_button_margin"
+        android:layout_height="@dimen/md_icon_button_margin"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_launcher_round" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/sort_btn"
+        style="@style/action_toolbar_button"
+        android:layout_width="@dimen/md_icon_button_margin"
+        android:layout_height="@dimen/md_icon_button_margin"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/filter_btn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_sort_black_24dp" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/filter_btn"
+        style="@style/action_toolbar_button"
+        android:layout_width="@dimen/md_icon_button_margin"
+        android:layout_height="@dimen/md_icon_button_margin"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/settings_btn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_launcher_round" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/settings_btn"
+        style="@style/action_toolbar_button"
+        android:layout_width="@dimen/md_icon_button_margin"
+        android:layout_height="@dimen/md_icon_button_margin"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+
+</productions.darthplagueis.weathersafe.view.layouts.ActionToolbarLayout>

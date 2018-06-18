@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#e91e63</color>
+    <color name="colorPrimaryDark">#c2185b</color>
+    <color name="colorPrimaryLight">#ff6090</color>
+
+    <color name="colorAccent">#1ee9a5</color>
+    <color name="colorAccentDark">#00d97b</color>
+    <color name="colorAccentLight">#6dffd7</color>
+
+    <color name="colorSurface">#ffffff</color>
+    <color name="colorSurfaceDark">#f5f5f5</color>
+    <color name="colorSurfaceLight">#ffffff</color>
+
+    <color name="colorDarkSurface">#000000</color>
+
+    <color name="md_blacktext_high_emphasis">#de000000</color>
+    <color name="md_blacktext_medium_emphasis">#99000000</color>
+    <color name="md_blacktext_disabled">#61000000</color>
+    <color name="md_whitetext_high_emphasis">#ffffff</color>
+    <color name="md_whitetext_medium_emphasis">#99ffffff</color>
+    <color name="md_whitetext_disabled">#61ffffff</color>
+
+    <color name="md_active_icon">#de000000</color>
+    <color name="md_inactive_icon">#8a000000</color>
+    <color name="md_inactive_nav">#c2000000</color>
+    <color name="md_disabled_icon">#61000000</color>
+    <color name="md_disabled_nav">#61000000</color>
+
+    <color name="md_mini_fab_color01">#00813d</color>
+    <color name="md_mini_fab_color02">#00a254</color>
+    <color name="md_mini_fab_color03">#00b461</color>
+
+    <color name="black87alpha">#de000000</color>
+    <color name="black60alpha">#99000000</color>
+    <color name="black38alpha">#61000000</color>
+    <color name="black25alpha">#40000000</color>
+
+    <color name="white60alpha">#99ffffff</color>
+    <color name="white38alpha">#61ffffff</color>
+    <color name="white25alpha">#40ffffff</color>
+
+    <color name="colorDarkGrey">#606060</color>
+    <color name="colorLightGrey">#e0e0e0</color>
+</resources>

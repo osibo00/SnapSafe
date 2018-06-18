@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/ascending_order"
+        android:title="@string/sort_from_oldest_to_newest" />
+    <item
+        android:id="@+id/descending_order"
+        android:title="@string/sort_from_newest_to_oldest" />
+    <item
+        android:id="@+id/album_order"
+        android:title="@string/sort_by_album" />
+</menu>
