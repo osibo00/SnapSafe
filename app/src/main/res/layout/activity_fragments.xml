@@ -7,7 +7,7 @@
     tools:context=".FragmentsActivity">
 
     <FrameLayout
-        android:id="@+id/container"
+        android:id="@+id/contentFrame"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"

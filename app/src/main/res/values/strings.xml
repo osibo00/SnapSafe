@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ContentVault</string>
+    <string name="app_name">SnapSafe</string>
     <string name="new_album_name">Enter Album Name</string>
     <string name="album_dialog_title">New Album</string>
     <string name="album_dialog_message">Create new album from selected?</string>
@@ -19,10 +19,10 @@
     <string name="enter_album_tags">Include Tags (Optional)</string>
     <string name="detail_photo">Detail Photo</string>
     <string name="select">Select Content</string>
-    <string name="import_photos">Add to Vault</string>
+    <string name="import_photos">Add to Photos</string>
     <string name="move_photos">Move Content</string>
     <string name="items_selected">\u0020Selected</string>
-    <string name="photovault_image">PhotoVault Image</string>
+    <string name="snapsafe_image">SnapSafe Image</string>
     <string name="photos">Photos</string>
     <string name="albums">Albums</string>
     <string name="search">Search</string>

@@ -10,9 +10,10 @@
     </style>
 
     <style name="AppTheme.NoToolbar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/md_mini_fab_color01</item>
+        <item name="colorPrimaryDark">@color/md_mini_fab_color01</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/md_inactive_icon</item>
         <item name="android:colorBackground">@color/colorSurface</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowEnterTransition">@android:transition/slide_right</item>
@@ -45,13 +46,19 @@
     <style name="action_toolbar_button" parent="Widget.AppCompat.ImageButton">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
-        <item name="android:tint">@color/md_inactive_nav</item>
     </style>
 
     <style name="FontHeading20sp" parent="@android:style/TextAppearance">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/md_blacktext_high_emphasis</item>
+        <item name="android:textSize">@dimen/text_view_20sp</item>
+    </style>
+
+    <style name="FontHeading20spGreen" parent="@android:style/TextAppearance">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/md_mini_fab_color01</item>
         <item name="android:textSize">@dimen/text_view_20sp</item>
     </style>
 
