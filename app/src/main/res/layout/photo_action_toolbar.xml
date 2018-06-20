@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<productions.darthplagueis.weathersafe.view.layouts.ActionToolbarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@android:color/white"
     tools:layout_height="?android:attr/actionBarSize">
 
-    <android.support.v7.widget.AppCompatImageButton
+    <ImageButton
         android:id="@+id/close_btn"
         style="@style/action_toolbar_button"
         android:layout_width="@dimen/md_icon_button_margin"
@@ -31,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/app_name" />
 
-    <android.support.v7.widget.AppCompatImageButton
+    <ImageButton
         android:id="@+id/delete_btn"
         style="@style/action_toolbar_button"
         android:layout_width="@dimen/md_icon_button_margin"
@@ -42,7 +42,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_delete_black_24dp" />
 
-    <android.support.v7.widget.AppCompatImageButton
+    <ImageButton
         android:id="@+id/copy_btn"
         style="@style/action_toolbar_button"
         android:layout_width="@dimen/md_icon_button_margin"
@@ -53,7 +53,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/ic_launcher_round" />
 
-    <android.support.v7.widget.AppCompatImageButton
+    <ImageButton
         android:id="@+id/create_folder_btn"
         style="@style/action_toolbar_button"
         android:layout_width="@dimen/md_icon_button_margin"
@@ -64,7 +64,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_create_new_folder_black_24dp" />
 
-    <android.support.v7.widget.AppCompatImageButton
+    <ImageButton
         android:id="@+id/search_btn"
         style="@style/action_toolbar_button"
         android:layout_width="@dimen/md_icon_button_margin"
@@ -72,10 +72,22 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.AppCompatImageButton
+    <TextView
+        android:id="@+id/AppBar_text"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="start|center_vertical"
+        android:text="@string/app_name"
+        android:textAppearance="@style/FontHeading20spGreen"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/filter_btn"
+        app:layout_constraintStart_toEndOf="@id/search_btn"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
         android:id="@+id/sort_btn"
         style="@style/action_toolbar_button"
         android:layout_width="@dimen/md_icon_button_margin"
@@ -86,7 +98,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_sort_black_24dp" />
 
-    <android.support.v7.widget.AppCompatImageButton
+    <ImageButton
         android:id="@+id/filter_btn"
         style="@style/action_toolbar_button"
         android:layout_width="@dimen/md_icon_button_margin"
@@ -95,7 +107,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/settings_btn"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        app:srcCompat="@drawable/ic_view_carousel_black_24dp" />
 
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/settings_btn"
@@ -108,4 +120,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
-</productions.darthplagueis.weathersafe.view.layouts.ActionToolbarLayout>
+</android.support.constraint.ConstraintLayout>

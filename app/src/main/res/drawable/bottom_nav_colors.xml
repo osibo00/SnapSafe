@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_checked="true"
-        android:color="@color/colorPrimaryDark" />
+        android:color="@color/md_mini_fab_color01" />
     <item
         android:state_checked="false"
         android:color="@color/md_inactive_icon" />

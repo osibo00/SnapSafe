@@ -2,13 +2,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppTheme" parent="AppTheme.NoToolbar">
-        <item name="android:windowLightStatusBar" tools:targetApi="27">true</item>
-        <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
         <item name="android:navigationBarColor">@android:color/white</item>
-        <item name="android:navigationBarDividerColor" tools:targetApi="27">
-            @color/md_inactive_icon
-        </item>
+        <item name="android:navigationBarDividerColor" tools:targetApi="27">@color/md_inactive_icon</item>
     </style>
 
 </resources>
