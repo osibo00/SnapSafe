@@ -32,7 +32,13 @@
                 app:contentInsetLeft="@dimen/no_margin"
                 app:contentInsetRight="@dimen/no_margin"
                 app:contentInsetStart="@dimen/no_margin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                <include
+                    android:id="@+id/photoActionBar"
+                    layout="@layout/photo_action_toolbar" />
+
+            </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.AppBarLayout>
 

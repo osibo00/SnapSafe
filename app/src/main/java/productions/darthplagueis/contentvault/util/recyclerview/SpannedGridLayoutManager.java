@@ -69,7 +69,6 @@ public class SpannedGridLayoutManager extends RecyclerView.LayoutManager {
         int orientation = a.getInt(
                 R.styleable.SpannedGridLayoutManager_android_orientation, RecyclerView.VERTICAL);
         a.recycle();
-        setAutoMeasureEnabled(true);
     }
 
     public interface GridSpanLookup {

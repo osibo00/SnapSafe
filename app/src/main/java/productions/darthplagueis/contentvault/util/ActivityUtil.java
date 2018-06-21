@@ -18,12 +18,13 @@ public class ActivityUtil {
         transaction.commit();
     }
 
-    public static void replaceFragmentInActivity(@NonNull FragmentManager fragmentManager,
-                                                 @NonNull Fragment fragment, String tag) {
+    public static void addFragmentInActivity(@NonNull FragmentManager fragmentManager,
+                                                 @NonNull Fragment fragment, int frameId) {
         checkNotNull(fragmentManager);
         checkNotNull(fragment);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(fragment, tag);
+        transaction.add(frameId, fragment);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 }

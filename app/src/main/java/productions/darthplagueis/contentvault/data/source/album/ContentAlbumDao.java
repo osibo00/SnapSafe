@@ -30,6 +30,9 @@ public interface ContentAlbumDao {
     @Query("SELECT * from content_album ORDER BY latest_timestamp DESC")
     LiveData<List<ContentAlbum>> getDescendingDateOrder();
 
+    @Query("SELECT file_directory from content_album")
+    List<String> getAlbumNames();
+
     @Delete
     void delete(ContentAlbum contentAlbum);
 }

@@ -7,13 +7,16 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,6 +24,7 @@ import productions.darthplagueis.contentvault.R;
 import productions.darthplagueis.contentvault.SingleLiveEvent;
 import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.data.source.content.UserContentRepository;
+import productions.darthplagueis.contentvault.photos.view.dialogs.DeleteDialog;
 import productions.darthplagueis.contentvault.util.CurrentDateUtil;
 import productions.darthplagueis.contentvault.util.FileManager;
 
@@ -32,11 +36,30 @@ public class UserContentViewModel extends AndroidViewModel {
 
     public final ObservableBoolean isFabClosing = new ObservableBoolean();
 
-    private UserContentRepository contentRepository;
+    public final ObservableBoolean isActionState = new ObservableBoolean();
+
+    public final ObservableField<String> photoActionBarText =
+            new ObservableField<>(getApplication().getString(R.string.zero_selected));
+
+    private List<UserContent> itemsSelectedList = new ArrayList<>();
 
     private SingleLiveEvent<Void> newPhotoImportEvent = new SingleLiveEvent<>();
 
     private SingleLiveEvent<Void> newMultiSelectionEvent = new SingleLiveEvent<>();
+
+    private SingleLiveEvent<Void> newSelectionEnabledEvent = new SingleLiveEvent<>();
+
+    private SingleLiveEvent<Void> newSelectionDisabledEvent = new SingleLiveEvent<>();
+
+    private SingleLiveEvent<Void> newDeletePromptEvent = new SingleLiveEvent<>();
+
+    private SingleLiveEvent<Void> newAlbumPromptEvent = new SingleLiveEvent<>();
+
+    private SingleLiveEvent<String> newPhotoDetailtEvent = new SingleLiveEvent<>();
+
+    private FileManager fileManager = new FileManager(getApplication());
+
+    private UserContentRepository contentRepository;
 
     public UserContentViewModel(@NonNull Application application) {
         super(application);
@@ -89,6 +112,26 @@ public class UserContentViewModel extends AndroidViewModel {
         return newMultiSelectionEvent;
     }
 
+    public SingleLiveEvent<Void> getNewSelectionEnabledEvent() {
+        return newSelectionEnabledEvent;
+    }
+
+    public SingleLiveEvent<Void> getNewSelectionDisabledEvent() {
+        return newSelectionDisabledEvent;
+    }
+
+    public SingleLiveEvent<Void> getNewDeletePromptEvent() {
+        return newDeletePromptEvent;
+    }
+
+    public SingleLiveEvent<Void> getNewAlbumPromptEvent() {
+        return newAlbumPromptEvent;
+    }
+
+    public SingleLiveEvent<String> getNewPhotoDetailEvent() {
+        return newPhotoDetailtEvent;
+    }
+
     public void importPhotos() {
         newPhotoImportEvent.call();
         extendFab();
@@ -96,6 +139,7 @@ public class UserContentViewModel extends AndroidViewModel {
 
     public void selectPhotos() {
         newMultiSelectionEvent.call();
+        isActionState.set(true);
         extendFab();
     }
 
@@ -113,11 +157,71 @@ public class UserContentViewModel extends AndroidViewModel {
         extendFab();
     }
 
+    public void enableMultiSelection() {
+        newSelectionEnabledEvent.call();
+        isActionState.set(true);
+    }
+
+    public void disableMultiSelection() {
+        Log.d("VM", "disableMultiSelection: ");
+        newSelectionDisabledEvent.call();
+        isActionState.set(false);
+        photoActionBarText.set(getApplication().getString(R.string.zero_selected));
+    }
+
+    public void totalItemsSelected(int amountSelected) {
+        photoActionBarText.set(String.valueOf(amountSelected) +
+                getApplication().getString(R.string.items_selected));
+    }
+
+    public void loadDetailView(UserContent userContent) {
+        newPhotoDetailtEvent.setValue(userContent.getFilePath());
+    }
+
+    public void contentSelected(UserContent userContent) {
+        if (itemsSelectedList.contains(userContent)) {
+            itemsSelectedList.remove(userContent);
+        } else {
+            itemsSelectedList.add(userContent);
+        }
+    }
+
+    public void presentDeletePrompt() {
+        if (itemsSelectedList.size() != 0) newDeletePromptEvent.call();
+    }
+
+    public void presentAlbumPrompt() {
+        if (itemsSelectedList.size() != 0) newAlbumPromptEvent.call();
+    }
+
+    public void createNewAlbum(String albumName) {
+        if (itemsSelectedList.size() != 0) {
+            fileManager.setNewDirectoryName(albumName);
+            for (UserContent item : itemsSelectedList) {
+                fileManager.setCurrentDirectoryName(item.getFileDirectory());
+                createContentEntity(fileManager.moveFile(item.getFileName()));
+                delete(item);
+            }
+            disableMultiSelection();
+        }
+    }
+
+    public void deleteSelected() {
+        if (itemsSelectedList.size() != 0) {
+            FileManager fileManager = new FileManager(getApplication());
+            for (UserContent item : itemsSelectedList) {
+                fileManager.setCurrentDirectoryName(item.getFileDirectory());
+                fileManager.deleteFile(item.getFileName());
+                delete(item);
+            }
+            disableMultiSelection();
+        }
+    }
+
     public void handleActivityResult(int requestCode, Intent data) {
         if (data != null) {
             if (requestCode == PICK_IMAGE_CODE_TAG && data.getClipData() != null) {
                 ClipData clipData = data.getClipData();
-                FileManager fileManager = new FileManager(getApplication());
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     Uri uri = item.getUri();
