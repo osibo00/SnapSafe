@@ -1,123 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    tools:layout_height="?android:attr/actionBarSize">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageButton
-        android:id="@+id/close_btn"
-        style="@style/action_toolbar_button"
-        android:layout_width="@dimen/md_icon_button_margin"
-        android:layout_height="@dimen/md_icon_button_margin"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_close_black_24dp" />
+    <data>
 
-    <TextView
-        android:id="@+id/utilBar_text"
-        android:layout_width="0dp"
+        <import type="android.view.View" />
+
+        <variable
+            name="toolBarViewModel"
+            type="productions.darthplagueis.contentvault.photos.UserContentViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/photo_action_bar_layout"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="start|center_vertical"
-        android:textAppearance="@style/FontHeading20sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/delete_btn"
-        app:layout_constraintStart_toEndOf="@id/close_btn"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/app_name" />
+        android:background="@{toolBarViewModel.isActionState ? @color/colorAccent : @android:color/white}"
+        tools:layout_height="?android:attr/actionBarSize">
 
-    <ImageButton
-        android:id="@+id/delete_btn"
-        style="@style/action_toolbar_button"
-        android:layout_width="@dimen/md_icon_button_margin"
-        android:layout_height="@dimen/md_icon_button_margin"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/copy_btn"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_delete_black_24dp" />
+        <ImageButton
+            android:id="@+id/close_btn"
+            style="@style/action_toolbar_button"
+            android:layout_width="@dimen/md_icon_button_margin"
+            android:layout_height="@dimen/md_icon_button_margin"
+            android:onClick="@{() -> toolBarViewModel.disableMultiSelection()}"
+            android:visibility="@{toolBarViewModel.isActionState ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_close_black_24dp" />
 
-    <ImageButton
-        android:id="@+id/copy_btn"
-        style="@style/action_toolbar_button"
-        android:layout_width="@dimen/md_icon_button_margin"
-        android:layout_height="@dimen/md_icon_button_margin"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/create_folder_btn"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        <TextView
+            android:id="@+id/utilBar_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="start|center_vertical"
+            android:text="@{toolBarViewModel.photoActionBarText}"
+            android:textAppearance="@style/FontHeading20sp"
+            android:visibility="@{toolBarViewModel.isActionState ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/delete_btn"
+            app:layout_constraintStart_toEndOf="@id/close_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/app_name" />
 
-    <ImageButton
-        android:id="@+id/create_folder_btn"
-        style="@style/action_toolbar_button"
-        android:layout_width="@dimen/md_icon_button_margin"
-        android:layout_height="@dimen/md_icon_button_margin"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_create_new_folder_black_24dp" />
+        <ImageButton
+            android:id="@+id/delete_btn"
+            style="@style/action_toolbar_button"
+            android:layout_width="@dimen/md_icon_button_margin"
+            android:layout_height="@dimen/md_icon_button_margin"
+            android:onClick="@{() -> toolBarViewModel.presentDeletePrompt()}"
+            android:visibility="@{toolBarViewModel.isActionState ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/copy_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_delete_black_24dp" />
 
-    <ImageButton
-        android:id="@+id/search_btn"
-        style="@style/action_toolbar_button"
-        android:layout_width="@dimen/md_icon_button_margin"
-        android:layout_height="@dimen/md_icon_button_margin"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageButton
+            android:id="@+id/copy_btn"
+            style="@style/action_toolbar_button"
+            android:layout_width="@dimen/md_icon_button_margin"
+            android:layout_height="@dimen/md_icon_button_margin"
+            android:visibility="@{toolBarViewModel.isActionState ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/create_folder_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_content_copy_black_24dp" />
 
-    <TextView
-        android:id="@+id/AppBar_text"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:gravity="start|center_vertical"
-        android:text="@string/app_name"
-        android:textAppearance="@style/FontHeading20spGreen"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/filter_btn"
-        app:layout_constraintStart_toEndOf="@id/search_btn"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageButton
+            android:id="@+id/create_folder_btn"
+            style="@style/action_toolbar_button"
+            android:layout_width="@dimen/md_icon_button_margin"
+            android:layout_height="@dimen/md_icon_button_margin"
+            android:onClick="@{() -> toolBarViewModel.presentAlbumPrompt()}"
+            android:visibility="@{toolBarViewModel.isActionState ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_create_new_folder_black_24dp" />
 
-    <ImageButton
-        android:id="@+id/sort_btn"
-        style="@style/action_toolbar_button"
-        android:layout_width="@dimen/md_icon_button_margin"
-        android:layout_height="@dimen/md_icon_button_margin"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/filter_btn"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_sort_black_24dp" />
+        <ImageButton
+            android:id="@+id/search_btn"
+            style="@style/action_toolbar_button"
+            android:layout_width="@dimen/md_icon_button_margin"
+            android:layout_height="@dimen/md_icon_button_margin"
+            android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/filter_btn"
-        style="@style/action_toolbar_button"
-        android:layout_width="@dimen/md_icon_button_margin"
-        android:layout_height="@dimen/md_icon_button_margin"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/settings_btn"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_view_carousel_black_24dp" />
+        <TextView
+            android:id="@+id/AppBar_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="start|center_vertical"
+            android:text="@string/app_name"
+            android:textAppearance="@style/FontHeading20spGreen"
+            android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/filter_btn"
+            app:layout_constraintStart_toEndOf="@id/search_btn"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.AppCompatImageButton
-        android:id="@+id/settings_btn"
-        style="@style/action_toolbar_button"
-        android:layout_width="@dimen/md_icon_button_margin"
-        android:layout_height="@dimen/md_icon_button_margin"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+        <ImageButton
+            android:id="@+id/sort_btn"
+            style="@style/action_toolbar_button"
+            android:layout_width="@dimen/md_icon_button_margin"
+            android:layout_height="@dimen/md_icon_button_margin"
+            android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/filter_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_sort_black_24dp" />
 
-</android.support.constraint.ConstraintLayout>
+        <ImageButton
+            android:id="@+id/filter_btn"
+            style="@style/action_toolbar_button"
+            android:layout_width="@dimen/md_icon_button_margin"
+            android:layout_height="@dimen/md_icon_button_margin"
+            android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/settings_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_view_carousel_black_24dp" />
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/settings_btn"
+            style="@style/action_toolbar_button"
+            android:layout_width="@dimen/md_icon_button_margin"
+            android:layout_height="@dimen/md_icon_button_margin"
+            android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

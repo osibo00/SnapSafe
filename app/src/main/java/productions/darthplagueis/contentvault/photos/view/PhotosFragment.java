@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,19 +16,27 @@ import android.view.ViewGroup;
 
 import java.util.Objects;
 
+import productions.darthplagueis.contentvault.BR;
 import productions.darthplagueis.contentvault.FragmentsActivity;
 import productions.darthplagueis.contentvault.R;
 import productions.darthplagueis.contentvault.databinding.PhotosFragmentBinding;
 import productions.darthplagueis.contentvault.photos.UserContentViewModel;
+import productions.darthplagueis.contentvault.photos.view.dialogs.CreateAlbumDialog;
+import productions.darthplagueis.contentvault.photos.view.dialogs.DeleteDialog;
+import productions.darthplagueis.contentvault.util.StatusBarColorUtil;
 import productions.darthplagueis.contentvault.util.recyclerview.GridSpacingItemDecoration;
 import productions.darthplagueis.contentvault.util.recyclerview.SpannedGridLayoutManager;
 
 
 public class PhotosFragment extends Fragment {
 
+    public final String DELETE_DIALOG_TAG = "DELETE_DIALOG_TAG";
+    public final String NEW_ALBUM_TAG = "NEW_ALBUM_TAG";
+
     private UserContentViewModel contentViewModel;
 
     private PhotosFragmentBinding photosFragmentBinding;
+
 
     public PhotosFragment() {
         // Required empty public constructor
@@ -45,10 +52,7 @@ public class PhotosFragment extends Fragment {
         photosFragmentBinding = PhotosFragmentBinding.inflate(inflater, container, false);
         contentViewModel = FragmentsActivity.obtainViewModel(Objects.requireNonNull(getActivity()));
         photosFragmentBinding.setViewmodel(contentViewModel);
-
-        Toolbar toolbar = photosFragmentBinding.galleryToolbar;
-        inflater.inflate(R.layout.photo_action_toolbar, toolbar);
-
+        photosFragmentBinding.photoActionBar.setVariable(BR.toolBarViewModel, contentViewModel);
         return photosFragmentBinding.getRoot();
     }
 
@@ -58,24 +62,54 @@ public class PhotosFragment extends Fragment {
 
         UserContentAdapter contentAdapter = new UserContentAdapter(contentViewModel);
         contentViewModel.getDescDateList().observe(this, contentAdapter::setUserContentList);
-        contentViewModel.getNewMultiSelectionEvent().observe(this, aVoid ->
-                contentAdapter.enableMultiSelection());
+
+        contentViewModel.getNewMultiSelectionEvent().observe(this, aVoid -> {
+            contentAdapter.enableMultiSelection();
+            StatusBarColorUtil.setStatusBarColor(getActivity(), R.color.colorAccent);
+        });
+
+        contentViewModel.getNewSelectionEnabledEvent().observe(this, aVoid ->
+                StatusBarColorUtil.setStatusBarColor(getActivity(), R.color.colorAccent)
+        );
+
+        contentViewModel.getNewSelectionDisabledEvent().observe(this, aVoid -> {
+            contentAdapter.disableMultiSelection();
+            StatusBarColorUtil.setStatusBarColor(getActivity(), R.color.colorSurface);
+        });
+
+        contentViewModel.getNewDeletePromptEvent().observe(this, aVoid ->
+                createDeleteDialog()
+        );
+
+        contentViewModel.getNewAlbumPromptEvent().observe(this, aVoid ->
+                createNewAlbumDialog()
+        );
 
         RecyclerView recyclerView = photosFragmentBinding.galleryRecyclerView;
         recyclerView.setAdapter(contentAdapter);
         recyclerView.setLayoutManager(new SpannedGridLayoutManager(
                 position -> {
-                    if (position == 0) {
+                    if (position == 3) {
                         return new SpannedGridLayoutManager.SpanInfo(2, 2);
                     } else if (position % 10 == 0) {
                         return new SpannedGridLayoutManager.SpanInfo(2, 2);
                     } else {
                         return new SpannedGridLayoutManager.SpanInfo(1, 1);
                     }
-                }, 3, 1f));
+                }, 4, 1f));
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(
                 3, dpToPx(4), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    private void createDeleteDialog() {
+        DeleteDialog deleteDialog = DeleteDialog.newInstance(contentViewModel);
+        deleteDialog.show(getChildFragmentManager(), DELETE_DIALOG_TAG);
+    }
+
+    private void createNewAlbumDialog() {
+        CreateAlbumDialog albumDialog = CreateAlbumDialog.newInstance(contentViewModel);
+        albumDialog.show(getChildFragmentManager(), NEW_ALBUM_TAG);
     }
 
     private int dpToPx(int dp) {

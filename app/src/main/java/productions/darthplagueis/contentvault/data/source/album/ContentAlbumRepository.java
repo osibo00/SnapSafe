@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import productions.darthplagueis.contentvault.data.ContentAlbum;
+import productions.darthplagueis.contentvault.util.DiskIOThreadExecutor;
 
 public class ContentAlbumRepository {
 
@@ -23,6 +24,10 @@ public class ContentAlbumRepository {
 
     public LiveData<List<ContentAlbum>> getDescDateList() {
         return contentAlbumDao.getDescendingDateOrder();
+    }
+
+    public List<String> getAlbumNames() {
+        return contentAlbumDao.getAlbumNames();
     }
 
     public void insert(ContentAlbum contentAlbums) {

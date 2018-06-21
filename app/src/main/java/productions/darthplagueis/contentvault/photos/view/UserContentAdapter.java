@@ -60,8 +60,10 @@ public class UserContentAdapter extends RecyclerView.Adapter<UserContentAdapter.
     }
 
     public void enableMultiSelection() {
-        isMultiSelection = true;
-        notifyDataSetChanged();
+        if (getItemCount() != 0) {
+            isMultiSelection = true;
+            notifyDataSetChanged();
+        }
     }
 
     public void disableMultiSelection() {
@@ -98,8 +100,13 @@ public class UserContentAdapter extends RecyclerView.Adapter<UserContentAdapter.
 
         @Override
         public boolean onLongClick(View v) {
-            if (!isMultiSelection) enableMultiSelection();
-            else disableMultiSelection();
+            if (!isMultiSelection) {
+                enableMultiSelection();
+                contentViewModel.enableMultiSelection();
+            } else {
+                disableMultiSelection();
+                contentViewModel.disableMultiSelection();
+            }
             return true;
         }
 
@@ -131,6 +138,10 @@ public class UserContentAdapter extends RecyclerView.Adapter<UserContentAdapter.
                     itemStateArray.put(position, true);
                     amountSelected++;
                 }
+                contentViewModel.totalItemsSelected(amountSelected);
+                contentViewModel.contentSelected(userContentList.get(position));
+            } else {
+                contentViewModel.loadDetailView(userContentList.get(getAdapterPosition()));
             }
         }
     }

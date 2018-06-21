@@ -2,20 +2,21 @@ package productions.darthplagueis.contentvault;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
+import productions.darthplagueis.contentvault.photos.ContentItemNavigator;
+import productions.darthplagueis.contentvault.photos.view.PhotoDetailFragment;
 import productions.darthplagueis.contentvault.photos.view.PhotosFragment;
 import productions.darthplagueis.contentvault.photos.UserContentViewModel;
 import productions.darthplagueis.contentvault.util.ActivityUtil;
 import productions.darthplagueis.contentvault.util.BottomNavigationViewUtil;
 
-public class FragmentsActivity extends AppCompatActivity {
+public class FragmentsActivity extends AppCompatActivity implements ContentItemNavigator {
 
     public static final String ACTION_PICK_PHOTOS_TAG = "ACTION_PICK_PHOTOS_TAG";
     public static final int PICK_IMAGE_CODE_TAG = 1987;
@@ -31,12 +32,6 @@ public class FragmentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragments);
 
-        View decorView = getWindow().getDecorView();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            getWindow().setStatusBarColor(Color.WHITE);
-        }
-
         navigation = findViewById(R.id.bottom_navigation);
         BottomNavigationViewUtil.disableShiftMode(navigation);
         setNavigationListener();
@@ -45,6 +40,9 @@ public class FragmentsActivity extends AppCompatActivity {
 
         viewModel = obtainViewModel(this);
         viewModel.getNewPhotoImportEvent().observe(this, aVoid -> importPhotos());
+        viewModel.getNewPhotoDetailEvent().observe(this, s -> {
+            if (s != null) openPhotoDetails(s);
+        });
     }
 
     @Override
@@ -52,11 +50,36 @@ public class FragmentsActivity extends AppCompatActivity {
         viewModel.handleActivityResult(requestCode, data);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+            setNavigationVisibility();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     public static UserContentViewModel obtainViewModel(FragmentActivity activity) {
         ViewModelFactory factory = ViewModelFactory.getINSTANCE(activity.getApplication());
-        UserContentViewModel viewModel =
-                ViewModelProviders.of(activity, factory).get(UserContentViewModel.class);
-        return viewModel;
+        return ViewModelProviders.of(activity, factory).get(UserContentViewModel.class);
+    }
+
+    public void setNavigationVisibility() {
+        if (!isNavigationHidden) {
+            isNavigationHidden = true;
+            navigation.setVisibility(View.GONE);
+        } else {
+            isNavigationHidden = false;
+            navigation.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void openPhotoDetails(String filePath) {
+        setNavigationVisibility();
+        ActivityUtil.addFragmentInActivity(getSupportFragmentManager(),
+                PhotoDetailFragment.newInstance(filePath), R.id.contentFrame);
     }
 
     private void setupPhotosFragment() {
@@ -67,6 +90,13 @@ public class FragmentsActivity extends AppCompatActivity {
             ActivityUtil.replaceFragmentInActivity(
                     getSupportFragmentManager(), photosFragment, R.id.contentFrame);
         }
+    }
+
+    private void importPhotos() {
+        Intent importPhotosIntent = new Intent(Intent.ACTION_PICK);
+        importPhotosIntent.setType("image/*");
+        importPhotosIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        startActivityForResult(Intent.createChooser(importPhotosIntent, ACTION_PICK_PHOTOS_TAG), PICK_IMAGE_CODE_TAG);
     }
 
     private void setNavigationListener() {
@@ -88,12 +118,5 @@ public class FragmentsActivity extends AppCompatActivity {
             return false;
         };
         navigation.setOnNavigationItemSelectedListener(listener);
-    }
-
-    private void importPhotos() {
-        Intent importPhotosIntent = new Intent(Intent.ACTION_PICK);
-        importPhotosIntent.setType("image/*");
-        importPhotosIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        startActivityForResult(Intent.createChooser(importPhotosIntent, ACTION_PICK_PHOTOS_TAG), PICK_IMAGE_CODE_TAG);
     }
 }

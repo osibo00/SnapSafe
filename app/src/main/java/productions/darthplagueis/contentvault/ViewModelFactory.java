@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
+import productions.darthplagueis.contentvault.photoalbums.ContentAlbumViewModel;
 import productions.darthplagueis.contentvault.photos.UserContentViewModel;
 
 public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
@@ -36,6 +37,9 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     public <T extends ViewModel> T create(Class<T> modelClass) {
         if (modelClass.isAssignableFrom(UserContentViewModel.class)) {
             return (T) new UserContentViewModel(application);
+        }
+        if (modelClass.isAssignableFrom(ContentAlbumViewModel.class)) {
+            return (T) new ContentAlbumViewModel(application);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }
