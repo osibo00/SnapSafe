@@ -40,11 +40,12 @@ ext {
     // App dependencies
     supportLibraryVersion = '27.1.1'
     constraintLayoutVersion = '1.1.2'
-    roomVersion = '1.1.0'
+    roomVersion = '1.1.1'
     archLifecycleVersion = '1.1.1'
     glideVersion = '4.7.1'
     junitVersion = '4.12'
     testRunnerVersion = '1.0.2'
     testEspressoVersion = '3.0.2'
     guavaVersion = '22.0-android'
+    circleImageViewVersion = '2.2.0'
 }

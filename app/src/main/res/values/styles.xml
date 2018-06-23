@@ -13,8 +13,6 @@
         <item name="colorPrimary">@color/md_mini_fab_color01</item>
         <item name="colorPrimaryDark">@color/md_mini_fab_color01</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-        <item name="android:statusBarColor" tools:targetApi="m">@android:color/white</item>
         <item name="android:colorBackground">@color/colorSurface</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowEnterTransition">@android:transition/slide_right</item>

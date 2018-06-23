@@ -25,7 +25,6 @@ import productions.darthplagueis.contentvault.photos.view.dialogs.CreateAlbumDia
 import productions.darthplagueis.contentvault.photos.view.dialogs.DeleteDialog;
 import productions.darthplagueis.contentvault.util.StatusBarColorUtil;
 import productions.darthplagueis.contentvault.util.recyclerview.GridSpacingItemDecoration;
-import productions.darthplagueis.contentvault.util.recyclerview.SpannedGridLayoutManager;
 
 
 public class PhotosFragment extends Fragment {
@@ -65,16 +64,16 @@ public class PhotosFragment extends Fragment {
 
         contentViewModel.getNewMultiSelectionEvent().observe(this, aVoid -> {
             contentAdapter.enableMultiSelection();
-            StatusBarColorUtil.setStatusBarColor(getActivity(), R.color.colorAccent);
+            StatusBarColorUtil.setActionBarColor(getActivity(), true);
         });
 
         contentViewModel.getNewSelectionEnabledEvent().observe(this, aVoid ->
-                StatusBarColorUtil.setStatusBarColor(getActivity(), R.color.colorAccent)
+                StatusBarColorUtil.setActionBarColor(getActivity(), true)
         );
 
         contentViewModel.getNewSelectionDisabledEvent().observe(this, aVoid -> {
             contentAdapter.disableMultiSelection();
-            StatusBarColorUtil.setStatusBarColor(getActivity(), R.color.colorSurface);
+            StatusBarColorUtil.setActionBarColor(getActivity(), false);
         });
 
         contentViewModel.getNewDeletePromptEvent().observe(this, aVoid ->
@@ -87,18 +86,20 @@ public class PhotosFragment extends Fragment {
 
         RecyclerView recyclerView = photosFragmentBinding.galleryRecyclerView;
         recyclerView.setAdapter(contentAdapter);
-        recyclerView.setLayoutManager(new SpannedGridLayoutManager(
-                position -> {
-                    if (position == 3) {
-                        return new SpannedGridLayoutManager.SpanInfo(2, 2);
-                    } else if (position % 10 == 0) {
-                        return new SpannedGridLayoutManager.SpanInfo(2, 2);
-                    } else {
-                        return new SpannedGridLayoutManager.SpanInfo(1, 1);
-                    }
-                }, 4, 1f));
+//        recyclerView.setLayoutManager(new SpannedGridLayoutManager(
+//                position -> {
+//                    if (position == 3) {
+//                        return new SpannedGridLayoutManager.SpanInfo(2, 2);
+//                    } else if (position % 10 == 0) {
+//                        return new SpannedGridLayoutManager.SpanInfo(2, 2);
+//                    } else {
+//                        return new SpannedGridLayoutManager.SpanInfo(1, 1);
+//                    }
+//                }, 4, 1f));
+
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(
-                3, dpToPx(4), true));
+                4, dpToPx(4), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
