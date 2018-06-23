@@ -19,6 +19,10 @@
         android:background="@{toolBarViewModel.isActionState ? @color/colorAccent : @android:color/white}"
         tools:layout_height="?android:attr/actionBarSize">
 
+        <!-- The action button row of the toolbar.
+        It is used when the user wants to multi-select
+        the images. -->
+
         <ImageButton
             android:id="@+id/close_btn"
             style="@style/action_toolbar_button"
@@ -80,11 +84,14 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_create_new_folder_black_24dp" />
 
-        <ImageButton
-            android:id="@+id/search_btn"
-            style="@style/action_toolbar_button"
-            android:layout_width="@dimen/md_icon_button_margin"
-            android:layout_height="@dimen/md_icon_button_margin"
+        <!-- The default button row of the toolbar. -->
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/app_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/childView_margin"
+            android:src="@drawable/ic_vault"
             android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -100,7 +107,7 @@
             android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/filter_btn"
-            app:layout_constraintStart_toEndOf="@id/search_btn"
+            app:layout_constraintStart_toEndOf="@id/app_btn"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton

@@ -24,7 +24,6 @@ import productions.darthplagueis.contentvault.R;
 import productions.darthplagueis.contentvault.SingleLiveEvent;
 import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.data.source.content.UserContentRepository;
-import productions.darthplagueis.contentvault.photos.view.dialogs.DeleteDialog;
 import productions.darthplagueis.contentvault.util.CurrentDateUtil;
 import productions.darthplagueis.contentvault.util.FileManager;
 
@@ -55,7 +54,7 @@ public class UserContentViewModel extends AndroidViewModel {
 
     private SingleLiveEvent<Void> newAlbumPromptEvent = new SingleLiveEvent<>();
 
-    private SingleLiveEvent<String> newPhotoDetailtEvent = new SingleLiveEvent<>();
+    private SingleLiveEvent<String> newPhotoDetailEvent = new SingleLiveEvent<>();
 
     private FileManager fileManager = new FileManager(getApplication());
 
@@ -129,7 +128,7 @@ public class UserContentViewModel extends AndroidViewModel {
     }
 
     public SingleLiveEvent<String> getNewPhotoDetailEvent() {
-        return newPhotoDetailtEvent;
+        return newPhotoDetailEvent;
     }
 
     public void importPhotos() {
@@ -175,7 +174,7 @@ public class UserContentViewModel extends AndroidViewModel {
     }
 
     public void loadDetailView(UserContent userContent) {
-        newPhotoDetailtEvent.setValue(userContent.getFilePath());
+        newPhotoDetailEvent.setValue(userContent.getFilePath());
     }
 
     public void contentSelected(UserContent userContent) {
@@ -208,7 +207,6 @@ public class UserContentViewModel extends AndroidViewModel {
 
     public void deleteSelected() {
         if (itemsSelectedList.size() != 0) {
-            FileManager fileManager = new FileManager(getApplication());
             for (UserContent item : itemsSelectedList) {
                 fileManager.setCurrentDirectoryName(item.getFileDirectory());
                 fileManager.deleteFile(item.getFileName());
@@ -219,23 +217,38 @@ public class UserContentViewModel extends AndroidViewModel {
     }
 
     public void handleActivityResult(int requestCode, Intent data) {
-        if (data != null) {
-            if (requestCode == PICK_IMAGE_CODE_TAG && data.getClipData() != null) {
-                ClipData clipData = data.getClipData();
+        if (data != null && requestCode == PICK_IMAGE_CODE_TAG) {
+            ClipData clipData = data.getClipData();
+            if (clipData != null) {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     ClipData.Item item = clipData.getItemAt(i);
                     Uri uri = item.getUri();
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(
-                                Objects.requireNonNull(getApplication().getApplicationContext())
-                                        .getContentResolver(), uri);
-                        createContentEntity(fileManager.saveBitmap(bitmap));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    convertToBitmap(uri);
                 }
+            } else {
+                Uri uri = data.getData();
+                convertToBitmap(uri);
             }
         }
+    }
+
+    private void convertToBitmap(Uri uri) {
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(
+                    (getApplication().getApplicationContext()).getContentResolver(), uri);
+            createContentEntity(fileManager.saveBitmap(bitmap));
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.getMessage();
+            e.getLocalizedMessage();
+        }
+    }
+
+    private void createContentEntity(File file) {
+        insert(new UserContent(file.getName(), file.getAbsolutePath(),
+                file.getParentFile().getName().substring(4),
+                CurrentDateUtil.getDateString(),
+                CurrentDateUtil.getTimeStamp()));
     }
 
     private static void setAnimation(View view, boolean isExtending) {
@@ -271,14 +284,5 @@ public class UserContentViewModel extends AndroidViewModel {
             default:
                 break;
         }
-    }
-
-    private void createContentEntity(File file) {
-        UserContent userContent = new UserContent(file.getName(), file.getAbsolutePath(),
-                file.getParentFile().getName().substring(4),
-                CurrentDateUtil.getDateString(),
-                CurrentDateUtil.getTimeStamp());
-
-        insert(userContent);
     }
 }

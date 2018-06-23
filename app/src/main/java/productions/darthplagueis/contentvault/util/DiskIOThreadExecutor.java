@@ -9,7 +9,7 @@ public class DiskIOThreadExecutor implements Executor {
 
     private final Executor diskIO;
 
-    public DiskIOThreadExecutor INSTANCE() {
+    public DiskIOThreadExecutor newInstance() {
         return new DiskIOThreadExecutor();
     }
 
