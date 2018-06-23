@@ -6,11 +6,13 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
+import productions.darthplagueis.contentvault.photoalbums.AlbumsFragment;
+import productions.darthplagueis.contentvault.photoalbums.ContentAlbumViewModel;
 import productions.darthplagueis.contentvault.photos.ContentItemNavigator;
-import productions.darthplagueis.contentvault.photos.view.PhotoDetailFragment;
+import productions.darthplagueis.contentvault.photodetail.DetailPhotoViewModel;
+import productions.darthplagueis.contentvault.photodetail.DetailPhotoFragment;
 import productions.darthplagueis.contentvault.photos.view.PhotosFragment;
 import productions.darthplagueis.contentvault.photos.UserContentViewModel;
 import productions.darthplagueis.contentvault.util.ActivityUtil;
@@ -23,7 +25,7 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
 
     private BottomNavigationView navigation;
 
-    private UserContentViewModel viewModel;
+    private UserContentViewModel contentViewModel;
 
     private boolean isNavigationHidden;
 
@@ -38,16 +40,18 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
 
         setupPhotosFragment();
 
-        viewModel = obtainViewModel(this);
-        viewModel.getNewPhotoImportEvent().observe(this, aVoid -> importPhotos());
-        viewModel.getNewPhotoDetailEvent().observe(this, s -> {
+        contentViewModel = obtainContentViewModel(this);
+        contentViewModel.getNewPhotoImportEvent().observe(this, aVoid -> importPhotos());
+        contentViewModel.getNewPhotoDetailEvent().observe(this, s -> {
             if (s != null) openPhotoDetails(s);
         });
+        DetailPhotoViewModel detailViewModel = obtainDetailViewModel(this);
+        detailViewModel.getNewBackButtonEvent().observe(this, aVoid -> onBackPressed());
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        viewModel.handleActivityResult(requestCode, data);
+        contentViewModel.handleActivityResult(requestCode, data);
     }
 
     @Override
@@ -60,12 +64,33 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
         }
     }
 
-    public static UserContentViewModel obtainViewModel(FragmentActivity activity) {
-        ViewModelFactory factory = ViewModelFactory.getINSTANCE(activity.getApplication());
-        return ViewModelProviders.of(activity, factory).get(UserContentViewModel.class);
+    @Override
+    public void openPhotoDetails(String filePath) {
+        setNavigationVisibility();
+        ActivityUtil.addFragmentInActivity(getSupportFragmentManager(),
+                DetailPhotoFragment.newInstance(filePath), R.id.contentFrame);
     }
 
-    public void setNavigationVisibility() {
+    public static UserContentViewModel obtainContentViewModel(FragmentActivity activity) {
+        return ViewModelProviders.of(activity, getViewModelFactory(activity))
+                .get(UserContentViewModel.class);
+    }
+
+    public static DetailPhotoViewModel obtainDetailViewModel(FragmentActivity activity) {
+        return ViewModelProviders.of(activity, getViewModelFactory(activity))
+                .get(DetailPhotoViewModel.class);
+    }
+
+    public static ContentAlbumViewModel obtainAlbumViewModel(FragmentActivity activity) {
+        return ViewModelProviders.of(activity, getViewModelFactory(activity))
+                .get(ContentAlbumViewModel.class);
+    }
+
+    private static ViewModelFactory getViewModelFactory(FragmentActivity activity) {
+        return ViewModelFactory.getINSTANCE(activity.getApplication());
+    }
+
+    private void setNavigationVisibility() {
         if (!isNavigationHidden) {
             isNavigationHidden = true;
             navigation.setVisibility(View.GONE);
@@ -75,20 +100,23 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
         }
     }
 
-    @Override
-    public void openPhotoDetails(String filePath) {
-        setNavigationVisibility();
-        ActivityUtil.addFragmentInActivity(getSupportFragmentManager(),
-                PhotoDetailFragment.newInstance(filePath), R.id.contentFrame);
-    }
-
     private void setupPhotosFragment() {
         PhotosFragment photosFragment =
-                (PhotosFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+                (PhotosFragment) getSupportFragmentManager().findFragmentByTag("PHOTOS_TAG");
         if (photosFragment == null) {
             photosFragment = PhotosFragment.newInstance();
             ActivityUtil.replaceFragmentInActivity(
                     getSupportFragmentManager(), photosFragment, R.id.contentFrame);
+        }
+    }
+
+    private void setupAlbumsFragment() {
+        AlbumsFragment albumsFragment =
+                (AlbumsFragment) getSupportFragmentManager().findFragmentByTag("ALBUMS_TAG");
+        if (albumsFragment == null) {
+            albumsFragment = AlbumsFragment.newInstance();
+            ActivityUtil.replaceFragmentInActivity(
+                    getSupportFragmentManager(), albumsFragment, R.id.contentFrame);
         }
     }
 
@@ -106,7 +134,7 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
                     setupPhotosFragment();
                     return true;
                 case R.id.navigation_albums:
-
+                    setupAlbumsFragment();
                     return true;
                 case R.id.navigation_favorites:
 

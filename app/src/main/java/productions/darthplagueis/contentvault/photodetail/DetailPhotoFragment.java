@@ -1,35 +1,35 @@
-package productions.darthplagueis.contentvault.photos.view;
+package productions.darthplagueis.contentvault.photodetail;
 
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
 import java.io.File;
 
-import productions.darthplagueis.contentvault.R;
+import productions.darthplagueis.contentvault.BR;
+import productions.darthplagueis.contentvault.FragmentsActivity;
 import productions.darthplagueis.contentvault.databinding.PhotoDetailFragmentBinding;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 
-
-public class PhotoDetailFragment extends Fragment {
+public class DetailPhotoFragment extends Fragment {
 
     private String photoDetailFilePath;
 
-    public PhotoDetailFragment() {
+    private PhotoDetailFragmentBinding detailFragmentBinding;
+
+    public DetailPhotoFragment() {
         // Required empty public constructor
     }
 
-    public static PhotoDetailFragment newInstance(@NonNull String filePath) {
-        PhotoDetailFragment fragment = new PhotoDetailFragment();
+    public static DetailPhotoFragment newInstance(@NonNull String filePath) {
+        DetailPhotoFragment fragment = new DetailPhotoFragment();
         fragment.photoDetailFilePath = filePath;
         return fragment;
     }
@@ -37,7 +37,7 @@ public class PhotoDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        PhotoDetailFragmentBinding detailFragmentBinding =
+        detailFragmentBinding =
                 PhotoDetailFragmentBinding.inflate(inflater, container, false);
 
         detailFragmentBinding.getRoot().setSystemUiVisibility(
@@ -50,5 +50,13 @@ public class PhotoDetailFragment extends Fragment {
                 .into(detailFragmentBinding.detailImageView);
 
         return detailFragmentBinding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        DetailPhotoViewModel detailViewModel =
+                FragmentsActivity.obtainDetailViewModel(getActivity());
+        detailFragmentBinding.setVariable(BR.detailViewModel, detailViewModel);
     }
 }

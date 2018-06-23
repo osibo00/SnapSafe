@@ -11,7 +11,7 @@
     <string name="dialog_no">NO</string>
     <string name="sort_from_oldest_to_newest">From Oldest to Newest</string>
     <string name="sort_from_newest_to_oldest">From Newest to Oldest</string>
-    <string name="sort_by_album">By Album Name</string>
+    <string name="sort_by_album">By Album Name A-Z</string>
     <string name="user_album_photo">Content Album Photo</string>
     <string name="create_album">Create Album</string>
     <string name="create_new_album">Create New Album</string>
@@ -31,4 +31,5 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="by_album_name_z_a">By Album Name Z-A</string>
 </resources>

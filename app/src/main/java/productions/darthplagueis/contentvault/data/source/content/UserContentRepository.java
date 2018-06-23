@@ -29,8 +29,12 @@ public class UserContentRepository {
         return userContentDao.getAscendingDateOrder();
     }
 
-    public LiveData<List<UserContent>> getAlbumOrderList() {
-        return userContentDao.getAlbumOrder();
+    public LiveData<List<UserContent>> getAlbumOrderAZList() {
+        return userContentDao.getAlbumOrderAZ();
+    }
+
+    public LiveData<List<UserContent>> getAlbumOrderZAList() {
+        return userContentDao.getAlbumOrderZA();
     }
 
     public LiveData<List<UserContent>> getLastItemByDirectory(String directoryName) {
