@@ -1,9 +1,11 @@
 package productions.darthplagueis.contentvault.photos.view.dialogs;
 
 import android.app.Dialog;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
@@ -23,6 +25,7 @@ import java.util.Objects;
 import productions.darthplagueis.contentvault.R;
 import productions.darthplagueis.contentvault.ViewModelFactory;
 import productions.darthplagueis.contentvault.data.ContentAlbum;
+import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.databinding.NewAlbumDialogBinding;
 import productions.darthplagueis.contentvault.photoalbums.ContentAlbumViewModel;
 import productions.darthplagueis.contentvault.photos.UserContentViewModel;
@@ -30,19 +33,19 @@ import productions.darthplagueis.contentvault.util.CurrentDateUtil;
 
 public class CreateAlbumDialog extends DialogFragment {
 
+    private List<UserContent> userContentList;
     private List<String> userAlbumList = new ArrayList<>();
 
     private String albumName;
     private String albumTag;
 
-    private UserContentViewModel contentViewModel;
     private ContentAlbumViewModel albumViewModel;
 
     private NewAlbumDialogBinding dialogBinding;
 
-    public static CreateAlbumDialog newInstance(UserContentViewModel viewModel) {
+    public static CreateAlbumDialog newInstance(List<UserContent> userContents) {
         CreateAlbumDialog dialog = new CreateAlbumDialog();
-        dialog.contentViewModel = viewModel;
+        dialog.userContentList = userContents;
         return dialog;
     }
 
@@ -54,12 +57,13 @@ public class CreateAlbumDialog extends DialogFragment {
         ViewModelFactory factory = ViewModelFactory.getINSTANCE(
                 Objects.requireNonNull(getActivity()).getApplication());
         albumViewModel = ViewModelProviders.of(getActivity(), factory).get(ContentAlbumViewModel.class);
-        List<ContentAlbum> allAlbums = albumViewModel.getAllAlbums().getValue();
-        if (allAlbums != null) {
-            for (ContentAlbum album : allAlbums) {
-                userAlbumList.add(album.getAlbumName());
+        albumViewModel.getAllAlbums().observe(this, contentAlbums -> {
+            if (contentAlbums != null) {
+                for (ContentAlbum album : contentAlbums) {
+                    userAlbumList.add(album.getAlbumName());
+                }
             }
-        }
+        });
 
         AlertDialog alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
                 .setView(dialogBinding.getRoot())
@@ -88,9 +92,7 @@ public class CreateAlbumDialog extends DialogFragment {
 
     private void onCreateClicked() {
         if (isValidName(dialogBinding.dialogTextAlbum, albumName)) {
-            contentViewModel.createNewAlbum(albumName);
-            albumViewModel.insert(new ContentAlbum(albumName, CurrentDateUtil.getDateString(),
-                    CurrentDateUtil.getTimeStamp()));
+            albumViewModel.createNewAlbum(albumName, userContentList);
             dismiss();
         }
     }

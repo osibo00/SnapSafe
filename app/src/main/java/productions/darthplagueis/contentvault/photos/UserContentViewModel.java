@@ -12,13 +12,13 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.util.Log;
+import android.support.v7.widget.PopupMenu;
+import android.view.Gravity;
 import android.view.View;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import productions.darthplagueis.contentvault.R;
 import productions.darthplagueis.contentvault.SingleLiveEvent;
@@ -40,7 +40,11 @@ public class UserContentViewModel extends AndroidViewModel {
     public final ObservableField<String> photoActionBarText =
             new ObservableField<>(getApplication().getString(R.string.zero_selected));
 
-    private List<UserContent> itemsSelectedList = new ArrayList<>();
+    private List<UserContent> itemsSelectedList = new ArrayList<>(0);
+
+    private SingleLiveEvent<List<UserContent>> newAlbumPromptEvent = new SingleLiveEvent<>();
+
+    private SingleLiveEvent<String> newPhotoDetailEvent = new SingleLiveEvent<>();
 
     private SingleLiveEvent<Void> newPhotoImportEvent = new SingleLiveEvent<>();
 
@@ -52,9 +56,7 @@ public class UserContentViewModel extends AndroidViewModel {
 
     private SingleLiveEvent<Void> newDeletePromptEvent = new SingleLiveEvent<>();
 
-    private SingleLiveEvent<Void> newAlbumPromptEvent = new SingleLiveEvent<>();
-
-    private SingleLiveEvent<String> newPhotoDetailEvent = new SingleLiveEvent<>();
+    private SingleLiveEvent<Void> newSortingEvent = new SingleLiveEvent<>();
 
     private FileManager fileManager = new FileManager(getApplication());
 
@@ -87,8 +89,12 @@ public class UserContentViewModel extends AndroidViewModel {
         return contentRepository.getAscDateList();
     }
 
-    public LiveData<List<UserContent>> getAlbumOrderList() {
-        return contentRepository.getAlbumOrderList();
+    public LiveData<List<UserContent>> getAlbumOrderAZList() {
+        return contentRepository.getAlbumOrderAZList();
+    }
+
+    public LiveData<List<UserContent>> getAlbumOrderZAList() {
+        return contentRepository.getAlbumOrderZAList();
     }
 
     public LiveData<List<UserContent>> getLastItemByDirectory(String albumName) {
@@ -101,6 +107,14 @@ public class UserContentViewModel extends AndroidViewModel {
 
     public void delete(UserContent userContent) {
         contentRepository.delete(userContent);
+    }
+
+    public SingleLiveEvent<List<UserContent>> getNewAlbumPromptEvent() {
+        return newAlbumPromptEvent;
+    }
+
+    public SingleLiveEvent<String> getNewPhotoDetailEvent() {
+        return newPhotoDetailEvent;
     }
 
     public SingleLiveEvent<Void> getNewPhotoImportEvent() {
@@ -123,12 +137,8 @@ public class UserContentViewModel extends AndroidViewModel {
         return newDeletePromptEvent;
     }
 
-    public SingleLiveEvent<Void> getNewAlbumPromptEvent() {
-        return newAlbumPromptEvent;
-    }
-
-    public SingleLiveEvent<String> getNewPhotoDetailEvent() {
-        return newPhotoDetailEvent;
+    public SingleLiveEvent<Void> getNewSortingEvent() {
+        return newSortingEvent;
     }
 
     public void importPhotos() {
@@ -139,6 +149,7 @@ public class UserContentViewModel extends AndroidViewModel {
     public void selectPhotos() {
         newMultiSelectionEvent.call();
         isActionState.set(true);
+        itemsSelectedList.clear();
         extendFab();
     }
 
@@ -159,10 +170,10 @@ public class UserContentViewModel extends AndroidViewModel {
     public void enableMultiSelection() {
         newSelectionEnabledEvent.call();
         isActionState.set(true);
+        itemsSelectedList.clear();
     }
 
     public void disableMultiSelection() {
-        Log.d("VM", "disableMultiSelection: ");
         newSelectionDisabledEvent.call();
         isActionState.set(false);
         photoActionBarText.set(getApplication().getString(R.string.zero_selected));
@@ -186,23 +197,21 @@ public class UserContentViewModel extends AndroidViewModel {
     }
 
     public void presentDeletePrompt() {
-        if (itemsSelectedList.size() != 0) newDeletePromptEvent.call();
+        if (itemsSelectedList.size() > 0) {
+            newDeletePromptEvent.call();
+            disableMultiSelection();
+        }
     }
 
     public void presentAlbumPrompt() {
-        if (itemsSelectedList.size() != 0) newAlbumPromptEvent.call();
-    }
-
-    public void createNewAlbum(String albumName) {
-        if (itemsSelectedList.size() != 0) {
-            fileManager.setNewDirectoryName(albumName);
-            for (UserContent item : itemsSelectedList) {
-                fileManager.setCurrentDirectoryName(item.getFileDirectory());
-                createContentEntity(fileManager.moveFile(item.getFileName()));
-                delete(item);
-            }
+        if (itemsSelectedList.size() > 0) {
+            newAlbumPromptEvent.setValue(itemsSelectedList);
             disableMultiSelection();
         }
+    }
+
+    public void createSortPopup() {
+        newSortingEvent.call();
     }
 
     public void deleteSelected() {
@@ -212,7 +221,7 @@ public class UserContentViewModel extends AndroidViewModel {
                 fileManager.deleteFile(item.getFileName());
                 delete(item);
             }
-            disableMultiSelection();
+            itemsSelectedList.clear();
         }
     }
 

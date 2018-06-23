@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import productions.darthplagueis.contentvault.photoalbums.ContentAlbumViewModel;
+import productions.darthplagueis.contentvault.photodetail.DetailPhotoViewModel;
 import productions.darthplagueis.contentvault.photos.UserContentViewModel;
 
 public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
@@ -40,6 +41,9 @@ public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
         }
         if (modelClass.isAssignableFrom(ContentAlbumViewModel.class)) {
             return (T) new ContentAlbumViewModel(application);
+        }
+        if (modelClass.isAssignableFrom(DetailPhotoViewModel.class)) {
+            return (T) new DetailPhotoViewModel(application);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

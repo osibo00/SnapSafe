@@ -114,6 +114,7 @@
             android:id="@+id/sort_btn"
             style="@style/action_toolbar_button"
             android:layout_width="@dimen/md_icon_button_margin"
+            android:onClick="@{() -> toolBarViewModel.createSortPopup()}"
             android:layout_height="@dimen/md_icon_button_margin"
             android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"

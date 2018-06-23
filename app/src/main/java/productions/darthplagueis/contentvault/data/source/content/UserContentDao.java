@@ -34,7 +34,10 @@ public interface UserContentDao {
     LiveData<List<UserContent>> getAscendingDateOrder();
 
     @Query("SELECT * from user_content ORDER BY file_directory ASC")
-    LiveData<List<UserContent>> getAlbumOrder();
+    LiveData<List<UserContent>> getAlbumOrderAZ();
+
+    @Query("SELECT * from user_content ORDER BY file_directory DESC")
+    LiveData<List<UserContent>> getAlbumOrderZA();
 
     @Query("SELECT * from user_content WHERE file_directory LIKE :directory")
     LiveData<List<UserContent>> getContentFromDirectory(String directory);

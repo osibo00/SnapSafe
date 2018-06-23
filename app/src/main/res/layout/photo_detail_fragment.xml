@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="detailViewModel"
+            type="productions.darthplagueis.contentvault.photodetail.DetailPhotoViewModel" />
+    </data>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -8,6 +18,19 @@
         android:clickable="true"
         android:fitsSystemWindows="true"
         android:focusable="true">
+
+        <ImageButton
+            android:id="@+id/detail_back_btn"
+            style="@style/Widget.AppCompat.ImageButton"
+            android:layout_width="@dimen/md_icon_button_margin"
+            android:layout_height="@dimen/md_icon_button_margin"
+            android:background="@color/black25alpha"
+            android:elevation="@dimen/appbar_elevation"
+            android:onClick="@{() -> detailViewModel.onBackButtonPressed()}"
+            android:tint="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
 
         <ImageView
             android:id="@+id/detail_imageView"

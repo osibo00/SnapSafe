@@ -91,6 +91,9 @@ public class UserContentAdapter extends RecyclerView.Adapter<UserContentAdapter.
                     .into(binding.photoImageView);
 
             displaySelectionStatus();
+
+            // For Testing.
+            binding.textView.setText(userContent.getFileDirectory());
         }
 
         @Override
@@ -126,8 +129,8 @@ public class UserContentAdapter extends RecyclerView.Adapter<UserContentAdapter.
         }
 
         void itemSelection() {
+            int position = getAdapterPosition();
             if (isMultiSelection) {
-                int position = getAdapterPosition();
                 boolean isItemSelected = itemStateArray.get(position);
                 if (isItemSelected) {
                     binding.photoCheckBox.setChecked(false);
@@ -141,7 +144,7 @@ public class UserContentAdapter extends RecyclerView.Adapter<UserContentAdapter.
                 contentViewModel.totalItemsSelected(amountSelected);
                 contentViewModel.contentSelected(userContentList.get(position));
             } else {
-                contentViewModel.loadDetailView(userContentList.get(getAdapterPosition()));
+                contentViewModel.loadDetailView(userContentList.get(position));
             }
         }
     }
