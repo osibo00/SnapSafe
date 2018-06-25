@@ -5,16 +5,16 @@ import android.support.annotation.NonNull;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class DiskIOThreadExecutor implements Executor {
+public class DatabaseThreadExecutor implements Executor {
 
-    private final Executor diskIO;
+    private final Executor databaseThread;
 
-    public DiskIOThreadExecutor() {
-        diskIO = Executors.newSingleThreadExecutor();
+    public DatabaseThreadExecutor() {
+        databaseThread = Executors.newSingleThreadExecutor();
     }
 
     @Override
     public void execute(@NonNull Runnable command) {
-        diskIO.execute(command);
+        databaseThread.execute(command);
     }
 }

@@ -20,7 +20,9 @@ import productions.darthplagueis.contentvault.databinding.PhotoDetailFragmentBin
 
 public class DetailPhotoFragment extends Fragment {
 
-    private String photoDetailFilePath;
+    public static final String ARGUMENT_DETAIL_TAG = "ARGUMENT_DETAIL";
+
+    private DetailPhotoViewModel detailViewModel;
 
     private PhotoDetailFragmentBinding detailFragmentBinding;
 
@@ -29,25 +31,25 @@ public class DetailPhotoFragment extends Fragment {
     }
 
     public static DetailPhotoFragment newInstance(@NonNull String filePath) {
+        Bundle arguments = new Bundle();
+        arguments.putString(ARGUMENT_DETAIL_TAG, filePath);
         DetailPhotoFragment fragment = new DetailPhotoFragment();
-        fragment.photoDetailFilePath = filePath;
+        fragment.setArguments(arguments);
         return fragment;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        detailFragmentBinding =
-                PhotoDetailFragmentBinding.inflate(inflater, container, false);
+        detailFragmentBinding = PhotoDetailFragmentBinding.inflate(
+                inflater, container, false);
+        detailViewModel = FragmentsActivity.obtainDetailViewModel(getActivity());
+        detailFragmentBinding.setVariable(BR.detailViewModel, detailViewModel);
 
         detailFragmentBinding.getRoot().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
-        Glide.with(detailFragmentBinding.getRoot())
-                .load(new File(photoDetailFilePath))
-                .into(detailFragmentBinding.detailImageView);
 
         return detailFragmentBinding.getRoot();
     }
@@ -55,8 +57,11 @@ public class DetailPhotoFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        DetailPhotoViewModel detailViewModel =
-                FragmentsActivity.obtainDetailViewModel(getActivity());
-        detailFragmentBinding.setVariable(BR.detailViewModel, detailViewModel);
+        String photoFilePath = getArguments() != null ? getArguments().getString(ARGUMENT_DETAIL_TAG) : null;
+        if (photoFilePath != null) {
+            Glide.with(detailFragmentBinding.getRoot())
+                    .load(new File(photoFilePath))
+                    .into(detailFragmentBinding.detailImageView);
+        }
     }
 }

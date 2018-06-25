@@ -1,5 +1,6 @@
 package productions.darthplagueis.contentvault.photos;
 
+import android.animation.Animator;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
@@ -12,8 +13,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.PopupMenu;
-import android.view.Gravity;
 import android.view.View;
 
 import java.io.File;
@@ -26,10 +25,12 @@ import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.data.source.content.UserContentRepository;
 import productions.darthplagueis.contentvault.util.CurrentDateUtil;
 import productions.darthplagueis.contentvault.util.FileManager;
+import productions.darthplagueis.contentvault.util.FileManagerCallBack;
 
 import static productions.darthplagueis.contentvault.FragmentsActivity.PICK_IMAGE_CODE_TAG;
 
-public class UserContentViewModel extends AndroidViewModel {
+public class UserContentViewModel extends AndroidViewModel implements FileManagerCallBack.SaveFileCallBack,
+        FileManagerCallBack.CopyFileCallBack {
 
     public final ObservableBoolean isFabExtending = new ObservableBoolean();
 
@@ -40,11 +41,15 @@ public class UserContentViewModel extends AndroidViewModel {
     public final ObservableField<String> photoActionBarText =
             new ObservableField<>(getApplication().getString(R.string.zero_selected));
 
+    private static boolean allowFabMovement;
+
     private List<UserContent> itemsSelectedList = new ArrayList<>(0);
 
     private SingleLiveEvent<List<UserContent>> newAlbumPromptEvent = new SingleLiveEvent<>();
 
     private SingleLiveEvent<String> newPhotoDetailEvent = new SingleLiveEvent<>();
+
+    private SingleLiveEvent<Void> newRecyclerViewLayoutEvent = new SingleLiveEvent<>();
 
     private SingleLiveEvent<Void> newPhotoImportEvent = new SingleLiveEvent<>();
 
@@ -55,6 +60,8 @@ public class UserContentViewModel extends AndroidViewModel {
     private SingleLiveEvent<Void> newSelectionDisabledEvent = new SingleLiveEvent<>();
 
     private SingleLiveEvent<Void> newDeletePromptEvent = new SingleLiveEvent<>();
+
+    private SingleLiveEvent<Void> newCopyPromptEvent = new SingleLiveEvent<>();
 
     private SingleLiveEvent<Void> newSortingEvent = new SingleLiveEvent<>();
 
@@ -69,12 +76,16 @@ public class UserContentViewModel extends AndroidViewModel {
 
     @BindingAdapter("openAnimation")
     public static void setOpenAnimation(View view, boolean isFabExtending) {
-        if (isFabExtending) setAnimation(view, true);
+        if (allowFabMovement) {
+            if (isFabExtending) setAnimation(view, true);
+        }
     }
 
     @BindingAdapter("closeAnimation")
     public static void setCloseAnimation(View view, boolean isFabClosing) {
-        if (isFabClosing) setAnimation(view, false);
+        if (allowFabMovement) {
+            if (isFabClosing) setAnimation(view, false);
+        }
     }
 
     public LiveData<List<UserContent>> getAllMedia() {
@@ -97,8 +108,8 @@ public class UserContentViewModel extends AndroidViewModel {
         return contentRepository.getAlbumOrderZAList();
     }
 
-    public LiveData<List<UserContent>> getLastItemByDirectory(String albumName) {
-        return contentRepository.getLastItemByDirectory(albumName);
+    public int getItemCount() {
+        return contentRepository.getItemCount();
     }
 
     public void insert(UserContent userContent) {
@@ -115,6 +126,10 @@ public class UserContentViewModel extends AndroidViewModel {
 
     public SingleLiveEvent<String> getNewPhotoDetailEvent() {
         return newPhotoDetailEvent;
+    }
+
+    public SingleLiveEvent<Void> getNewRecyclerViewLayoutEvent() {
+        return newRecyclerViewLayoutEvent;
     }
 
     public SingleLiveEvent<Void> getNewPhotoImportEvent() {
@@ -137,6 +152,10 @@ public class UserContentViewModel extends AndroidViewModel {
         return newDeletePromptEvent;
     }
 
+    public SingleLiveEvent<Void> getNewCopyPromptEvent() {
+        return newCopyPromptEvent;
+    }
+
     public SingleLiveEvent<Void> getNewSortingEvent() {
         return newSortingEvent;
     }
@@ -153,7 +172,32 @@ public class UserContentViewModel extends AndroidViewModel {
         extendFab();
     }
 
+    public void enableMultiSelection() {
+        newSelectionEnabledEvent.call();
+        isActionState.set(true);
+        itemsSelectedList.clear();
+    }
+
+    public void disableMultiSelection() {
+        newSelectionDisabledEvent.call();
+        isActionState.set(false);
+        photoActionBarText.set(getApplication().getString(R.string.zero_selected));
+    }
+
+    public void loadDetailView(UserContent userContent) {
+        newPhotoDetailEvent.setValue(userContent.getFilePath());
+    }
+
+    public void createSortPopup() {
+        newSortingEvent.call();
+    }
+
+    public void createFilterPopup() {
+        newRecyclerViewLayoutEvent.call();
+    }
+
     public void extendFab() {
+        allowFabMovement = true;
         if (!isFabExtending.get()) {
             isFabClosing.set(false);
             isFabExtending.set(true);
@@ -167,25 +211,9 @@ public class UserContentViewModel extends AndroidViewModel {
         extendFab();
     }
 
-    public void enableMultiSelection() {
-        newSelectionEnabledEvent.call();
-        isActionState.set(true);
-        itemsSelectedList.clear();
-    }
-
-    public void disableMultiSelection() {
-        newSelectionDisabledEvent.call();
-        isActionState.set(false);
-        photoActionBarText.set(getApplication().getString(R.string.zero_selected));
-    }
-
     public void totalItemsSelected(int amountSelected) {
         photoActionBarText.set(String.valueOf(amountSelected) +
                 getApplication().getString(R.string.items_selected));
-    }
-
-    public void loadDetailView(UserContent userContent) {
-        newPhotoDetailEvent.setValue(userContent.getFilePath());
     }
 
     public void contentSelected(UserContent userContent) {
@@ -203,6 +231,13 @@ public class UserContentViewModel extends AndroidViewModel {
         }
     }
 
+    public void presentCopyPrompt() {
+        if (itemsSelectedList.size() > 0) {
+            newCopyPromptEvent.call();
+            disableMultiSelection();
+        }
+    }
+
     public void presentAlbumPrompt() {
         if (itemsSelectedList.size() > 0) {
             newAlbumPromptEvent.setValue(itemsSelectedList);
@@ -210,18 +245,22 @@ public class UserContentViewModel extends AndroidViewModel {
         }
     }
 
-    public void createSortPopup() {
-        newSortingEvent.call();
-    }
-
     public void deleteSelected() {
         if (itemsSelectedList.size() != 0) {
             for (UserContent item : itemsSelectedList) {
                 fileManager.setCurrentDirectoryName(item.getFileDirectory());
-                fileManager.deleteFile(item.getFileName());
+                fileManager.deleteFileAsync(item.getFileName());
                 delete(item);
             }
-            itemsSelectedList.clear();
+        }
+    }
+
+    public void copySelected() {
+        if (itemsSelectedList.size() != 0) {
+            for (UserContent item : itemsSelectedList) {
+                fileManager.setCurrentDirectoryName(item.getFileDirectory());
+                fileManager.copyFileAsync(item.getFileName(), this);
+            }
         }
     }
 
@@ -241,23 +280,31 @@ public class UserContentViewModel extends AndroidViewModel {
         }
     }
 
+    @Override
+    public void onFileSaved(File file) {
+        createContentEntity(file);
+    }
+
+    @Override
+    public void onFileCopied(File file) {
+        createContentEntity(file);
+    }
+
     private void convertToBitmap(Uri uri) {
+        fileManager.setCurrentDirectoryName(FileManager.DEFAULT_DIRECTORY_TAG);
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(
                     (getApplication().getApplicationContext()).getContentResolver(), uri);
-            createContentEntity(fileManager.saveBitmap(bitmap));
+            fileManager.saveBitmapAsync(bitmap, this);
         } catch (Exception e) {
             e.printStackTrace();
-            e.getMessage();
-            e.getLocalizedMessage();
         }
     }
 
     private void createContentEntity(File file) {
-        insert(new UserContent(file.getName(), file.getAbsolutePath(),
-                file.getParentFile().getName().substring(4),
-                CurrentDateUtil.getDateString(),
-                CurrentDateUtil.getTimeStamp()));
+        insert(new UserContent(file.getName(), CurrentDateUtil.getDateString(),
+                CurrentDateUtil.getTimeStamp(), file.getAbsolutePath(),
+                file.getParentFile().getName().substring(4)));
     }
 
     private static void setAnimation(View view, boolean isExtending) {
@@ -287,7 +334,27 @@ public class UserContentViewModel extends AndroidViewModel {
                     view.animate().translationY(
                             -view.getContext().getResources().getDimension(R.dimen.dp_145));
                 } else {
-                    view.animate().translationY(0);
+                    view.animate().translationY(0).setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            allowFabMovement = false;
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
                 }
                 break;
             default:

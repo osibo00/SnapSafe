@@ -7,15 +7,19 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import productions.darthplagueis.contentvault.data.ContentAlbum;
+import productions.darthplagueis.contentvault.util.AppExecutors;
 import productions.darthplagueis.contentvault.util.DiskIOThreadExecutor;
 
 public class ContentAlbumRepository {
+
+    private AppExecutors appExecutors;
 
     private ContentAlbumDao contentAlbumDao;
 
     public ContentAlbumRepository(Application application) {
         ContentAlbumDatabase db = ContentAlbumDatabase.getDatabase(application);
         contentAlbumDao = db.contentAlbumDao();
+        appExecutors = new AppExecutors();
     }
 
     public LiveData<List<ContentAlbum>> getAllAlbums() {
@@ -36,6 +40,11 @@ public class ContentAlbumRepository {
 
     public void delete(ContentAlbum contentAlbums) {
         new deleteAsyncTask(contentAlbumDao).execute(contentAlbums);
+    }
+
+    public void deleteAll() {
+        Runnable runnable = () -> contentAlbumDao.deleteAll();
+        appExecutors.getDatabaseThread().execute(runnable);
     }
 
     private static class insertAsyncTask extends AsyncTask<ContentAlbum, Void, Void> {

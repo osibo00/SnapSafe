@@ -18,19 +18,19 @@ public class UserContent {
     private final String fileName;
 
     @NonNull
-    @ColumnInfo(name = "file_path")
-    private final String filePath;
-
-    @NonNull
-    @ColumnInfo(name = "file_directory")
-    private final String fileDirectory;
-
-    @NonNull
     @ColumnInfo(name = "import_date")
     private final String importDate;
 
     @ColumnInfo(name = "time_stamp")
     private final long timeStamp;
+
+    @NonNull
+    @ColumnInfo(name = "file_path")
+    private String filePath;
+
+    @NonNull
+    @ColumnInfo(name = "file_directory")
+    private String fileDirectory;
 
     @Nullable
     @ColumnInfo(name = "content_tag")
@@ -40,11 +40,11 @@ public class UserContent {
     private boolean isFavorite;
 
     public UserContent(@NonNull String fileName,
+                       @NonNull String importDate,
+                       long timeStamp,
                        @NonNull String filePath,
                        @NonNull String fileDirectory,
-                       @NonNull String importDate,
                        @Nullable String contentTag,
-                       long timeStamp,
                        boolean isFavorite) {
         this.fileName = fileName;
         this.filePath = filePath;
@@ -57,12 +57,21 @@ public class UserContent {
 
     @Ignore
     public UserContent(@NonNull String fileName,
+                       @NonNull String importDate,
+                       long timeStamp,
+                       @NonNull String filePath,
+                       @NonNull String fileDirectory) {
+        this(fileName, importDate, timeStamp, filePath, fileDirectory, null, false);
+    }
+
+    @Ignore
+    public UserContent(@NonNull String fileName,
+                       @NonNull String importDate,
+                       long timeStamp,
                        @NonNull String filePath,
                        @NonNull String fileDirectory,
-                       @NonNull String importDate,
-                       long timeStamp) {
-        this(fileName, filePath, fileDirectory, importDate,
-                null, timeStamp, false);
+                       @Nullable String contentTag) {
+        this(fileName, importDate, timeStamp, filePath, fileDirectory, contentTag, false);
     }
 
     public void setId(int id) {
@@ -104,6 +113,22 @@ public class UserContent {
 
     public boolean isFavorite() {
         return isFavorite;
+    }
+
+    public void setFilePath(@NonNull String filePath) {
+        this.filePath = filePath;
+    }
+
+    public void setFileDirectory(@NonNull String fileDirectory) {
+        this.fileDirectory = fileDirectory;
+    }
+
+    public void setContentTag(@Nullable String contentTag) {
+        this.contentTag = contentTag;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 }
 

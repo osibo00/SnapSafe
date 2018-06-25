@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import productions.darthplagueis.contentvault.photoalbums.AlbumsFragment;
@@ -22,6 +23,8 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
 
     public static final String ACTION_PICK_PHOTOS_TAG = "ACTION_PICK_PHOTOS_TAG";
     public static final int PICK_IMAGE_CODE_TAG = 1987;
+
+    private PhotosFragment photosFragment;
 
     private BottomNavigationView navigation;
 
@@ -47,6 +50,8 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
         });
         DetailPhotoViewModel detailViewModel = obtainDetailViewModel(this);
         detailViewModel.getNewBackButtonEvent().observe(this, aVoid -> onBackPressed());
+
+        Log.d("fragact", "onCreate: " + contentViewModel.getItemCount());
     }
 
     @Override
@@ -101,7 +106,7 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
     }
 
     private void setupPhotosFragment() {
-        PhotosFragment photosFragment =
+        photosFragment =
                 (PhotosFragment) getSupportFragmentManager().findFragmentByTag("PHOTOS_TAG");
         if (photosFragment == null) {
             photosFragment = PhotosFragment.newInstance();

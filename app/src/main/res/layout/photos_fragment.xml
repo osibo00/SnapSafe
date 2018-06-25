@@ -142,7 +142,7 @@
                 app:elevation="@dimen/fab_elevation"
                 app:fabSize="mini"
                 app:rippleColor="@color/black38alpha"
-                app:srcCompat="@drawable/ic_swap_horiz_black_24dp" />
+                app:srcCompat="@drawable/ic_camera_black_24dp" />
 
         </LinearLayout>
 

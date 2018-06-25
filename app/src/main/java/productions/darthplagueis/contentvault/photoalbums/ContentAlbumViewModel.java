@@ -12,11 +12,11 @@ import productions.darthplagueis.contentvault.data.ContentAlbum;
 import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.data.source.album.ContentAlbumRepository;
 import productions.darthplagueis.contentvault.data.source.content.UserContentRepository;
-import productions.darthplagueis.contentvault.photos.UserContentViewModel;
 import productions.darthplagueis.contentvault.util.CurrentDateUtil;
 import productions.darthplagueis.contentvault.util.FileManager;
+import productions.darthplagueis.contentvault.util.FileManagerCallBack;
 
-public class ContentAlbumViewModel extends AndroidViewModel {
+public class ContentAlbumViewModel extends AndroidViewModel implements FileManagerCallBack.MoveFileCallBack {
 
     private FileManager fileManager = new FileManager(getApplication());
 
@@ -41,11 +41,11 @@ public class ContentAlbumViewModel extends AndroidViewModel {
         return albumRepository.getAlbumNames();
     }
 
-    public void insert(ContentAlbum contentAlbum) {
+    public void insertContentAlbum(ContentAlbum contentAlbum) {
         albumRepository.insert(contentAlbum);
     }
 
-    public void delete(ContentAlbum contentAlbum) {
+    public void deleteContentAlbum(ContentAlbum contentAlbum) {
         albumRepository.delete(contentAlbum);
     }
 
@@ -53,27 +53,51 @@ public class ContentAlbumViewModel extends AndroidViewModel {
         contentRepository.insert(userContent);
     }
 
+    public void updateUserContent(UserContent userContent) {
+        contentRepository.update(userContent);
+    }
+
     public void deleteUserContent(UserContent userContent) {
         contentRepository.delete(userContent);
     }
 
-    public void createNewAlbum(String albumName, List<UserContent> itemsSelectedList) {
+    public void createNewAlbum(String albumName, String tag, List<UserContent> itemsSelectedList) {
         if (itemsSelectedList.size() != 0) {
             fileManager.setNewDirectoryName(albumName);
-            insert(new ContentAlbum(albumName, CurrentDateUtil.getDateString(),
-                    CurrentDateUtil.getTimeStamp()));
-            for (UserContent item : itemsSelectedList) {
-                fileManager.setCurrentDirectoryName(item.getFileDirectory());
-                createContentEntity(fileManager.moveFile(item.getFileName()));
-                deleteUserContent(item);
+            for (int i = 0; i < itemsSelectedList.size(); i++) {
+                UserContent itemSelected = itemsSelectedList.get(i);
+                itemSelected.setContentTag(tag);
+                //fileManager.setCurrentDirectoryName(itemSelected.getFileDirectory());
+                if (i == 0) {
+                    fileManager.moveFileAsync(itemSelected, true, this);
+                } else {
+                    fileManager.moveFileAsync(itemSelected, false, this);
+                }
             }
         }
     }
 
-    private void createContentEntity(File file) {
-        insertUserContent(new UserContent(file.getName(), file.getAbsolutePath(),
+    @Override
+    public void onAlbumCreated(File file, UserContent userContent) {
+        insertContentAlbum(new ContentAlbum(
                 file.getParentFile().getName().substring(4),
+                file.getAbsolutePath(),
                 CurrentDateUtil.getDateString(),
-                CurrentDateUtil.getTimeStamp()));
+                CurrentDateUtil.getTimeStamp(),
+                userContent.getContentTag()));
+
+        updateUserContentFields(userContent, file);
     }
+
+    @Override
+    public void onFileMoved(File file, UserContent userContent) {
+        updateUserContentFields(userContent, file);
+    }
+
+    private void updateUserContentFields(UserContent userContent, File file) {
+        userContent.setFilePath(file.getAbsolutePath());
+        userContent.setFileDirectory(file.getParentFile().getName().substring(4));
+        updateUserContent(userContent);
+    }
+
 }

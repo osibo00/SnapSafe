@@ -19,25 +19,24 @@
         android:fitsSystemWindows="true"
         android:focusable="true">
 
-        <ImageButton
-            android:id="@+id/detail_back_btn"
-            style="@style/Widget.AppCompat.ImageButton"
-            android:layout_width="@dimen/md_icon_button_margin"
-            android:layout_height="@dimen/md_icon_button_margin"
-            android:background="@color/black25alpha"
-            android:elevation="@dimen/appbar_elevation"
-            android:onClick="@{() -> detailViewModel.onBackButtonPressed()}"
-            android:tint="@android:color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
-
         <ImageView
             android:id="@+id/detail_imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/snapsafe_image"
             android:scaleType="fitCenter" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/detail_back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> detailViewModel.onBackButtonPressed()}"
+            android:padding="@dimen/circle_image_margins"
+            android:src="@drawable/ic_arrow_back_white_24dp"
+            app:civ_border_color="@android:color/white"
+            app:civ_border_width="@dimen/circle_image_border"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>
