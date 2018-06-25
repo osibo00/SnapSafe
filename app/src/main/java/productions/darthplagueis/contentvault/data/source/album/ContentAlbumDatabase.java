@@ -7,7 +7,7 @@ import android.content.Context;
 
 import productions.darthplagueis.contentvault.data.ContentAlbum;
 
-@Database(entities = {ContentAlbum.class}, version = 1)
+@Database(entities = {ContentAlbum.class}, version = 2)
 public abstract class ContentAlbumDatabase extends RoomDatabase {
 
     public abstract ContentAlbumDao contentAlbumDao();

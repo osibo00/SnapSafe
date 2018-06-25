@@ -11,28 +11,26 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
-public class FileManager {
+import productions.darthplagueis.contentvault.data.UserContent;
+
+public class FileManager implements FileManagerCallBack {
 
     public static final String DEFAULT_DIRECTORY_TAG = "user_content_album";
 
     private String currentDirectoryName = DEFAULT_DIRECTORY_TAG;
     private String newDirectoryName = "";
-    private String fileName = "";
     private String fileExtension = ".jpg";
 
     private Context context;
+
+    private AppExecutors appExecutors;
 
     private FileManager() {
     }
 
     public FileManager(Context context) {
         this.context = context;
-    }
-
-    public FileManager retrieveFile(Context context, String fileName) {
-        this.context = context;
-        this.fileName = fileName;
-        return this;
+        appExecutors = new AppExecutors();
     }
 
     public void setCurrentDirectoryName(String currentDirectoryName) {
@@ -65,7 +63,28 @@ public class FileManager {
         return file;
     }
 
-    public Bitmap load() {
+    public void saveBitmapAsync(Bitmap bitmap, SaveFileCallBack callBack) {
+        Runnable runnable = () -> {
+            File file = new File(directoryCheck(currentDirectoryName), createFileName());
+            FileOutputStream outputStream = null;
+            try {
+                outputStream = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (outputStream != null) outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            appExecutors.getMainThread().execute(() -> callBack.onFileSaved(file));
+        };
+        appExecutors.getDiskIO().execute(runnable);
+    }
+
+    public Bitmap load(String fileName) {
         File file = new File(directoryCheck(currentDirectoryName), fileName);
         FileInputStream inputStream = null;
         try {
@@ -93,7 +112,7 @@ public class FileManager {
             inputChannel = new FileInputStream(file).getChannel();
             inputChannel.transferTo(0, inputChannel.size(), outputChannel);
             inputChannel.close();
-            deleteFile(fileName);
+            deleteFileAsync(fileName);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -107,14 +126,100 @@ public class FileManager {
         return newFile;
     }
 
-    public void deleteFile(String fileName) {
+    public void moveFileAsync(UserContent userContent, boolean isAlbumCreation, MoveFileCallBack callBack) {
+        Runnable runnable = () -> {
+            String fileName = userContent.getFileName();
+            File file = new File(directoryCheck(userContent.getFileDirectory()), fileName);
+            File newFile = new File(directoryCheck(newDirectoryName), createFileName());
+            FileChannel outputChannel = null;
+            FileChannel inputChannel = null;
+            try {
+                outputChannel = new FileOutputStream(newFile).getChannel();
+                inputChannel = new FileInputStream(file).getChannel();
+                inputChannel.transferTo(0, inputChannel.size(), outputChannel);
+                inputChannel.close();
+                deleteFileAsync(fileName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (inputChannel != null) inputChannel.close();
+                    if (outputChannel != null) outputChannel.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            appExecutors.getMainThread().execute(() -> {
+                if (isAlbumCreation) {
+                    callBack.onAlbumCreated(newFile, userContent);
+                } else {
+                    callBack.onFileMoved(newFile, userContent);
+                }
+            });
+        };
+        appExecutors.getDiskIO().execute(runnable);
+    }
+
+    public File copyFile(String fileName) {
         File file = new File(directoryCheck(currentDirectoryName), fileName);
+        File newFile = new File(directoryCheck(DEFAULT_DIRECTORY_TAG), createFileName());
+        FileChannel outputChannel = null;
+        FileChannel inputChannel = null;
         try {
-            boolean isDeleted = file.delete();
-            Log.i("FileManager", "deleteFile: " + isDeleted);
+            outputChannel = new FileOutputStream(newFile).getChannel();
+            inputChannel = new FileInputStream(file).getChannel();
+            inputChannel.transferTo(0, inputChannel.size(), outputChannel);
+            inputChannel.close();
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (inputChannel != null) inputChannel.close();
+                if (outputChannel != null) outputChannel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        return newFile;
+    }
+
+    public void copyFileAsync(String fileName, CopyFileCallBack callBack) {
+        Runnable runnable = () -> {
+            File file = new File(directoryCheck(currentDirectoryName), fileName);
+            File newFile = new File(directoryCheck(DEFAULT_DIRECTORY_TAG), createFileName());
+            FileChannel outputChannel = null;
+            FileChannel inputChannel = null;
+            try {
+                outputChannel = new FileOutputStream(newFile).getChannel();
+                inputChannel = new FileInputStream(file).getChannel();
+                inputChannel.transferTo(0, inputChannel.size(), outputChannel);
+                inputChannel.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (inputChannel != null) inputChannel.close();
+                    if (outputChannel != null) outputChannel.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            appExecutors.getMainThread().execute(() -> callBack.onFileCopied(newFile));
+        };
+        appExecutors.getDiskIO().execute(runnable);
+    }
+
+    public void deleteFileAsync(String fileName) {
+        Runnable runnable = () -> {
+            File file = new File(directoryCheck(currentDirectoryName), fileName);
+            try {
+                boolean isDeleted = file.delete();
+                Log.i("FileManager", "deleteFileAsync: " + isDeleted);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        };
+        appExecutors.getDiskIO().execute(runnable);
     }
 
     private File directoryCheck(String directoryName) {

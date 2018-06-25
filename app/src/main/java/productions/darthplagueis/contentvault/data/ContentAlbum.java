@@ -18,6 +18,10 @@ public class ContentAlbum {
     private String albumName;
 
     @NonNull
+    @ColumnInfo(name = "directory_icon")
+    private String directoryIcon;
+
+    @NonNull
     @ColumnInfo(name = "creation_date")
     private String creationDate;
 
@@ -29,10 +33,12 @@ public class ContentAlbum {
     private String albumTag;
 
     public ContentAlbum(@NonNull String albumName,
+                        @NonNull String directoryIcon,
                         @NonNull String creationDate,
                         long latestTimestamp,
                         @Nullable String albumTag) {
         this.albumName = albumName;
+        this.directoryIcon = directoryIcon;
         this.creationDate = creationDate;
         this.latestTimestamp = latestTimestamp;
         this.albumTag = albumTag;
@@ -40,9 +46,10 @@ public class ContentAlbum {
 
     @Ignore
     public ContentAlbum(@NonNull String albumName,
+                        @NonNull String directoryIcon,
                         @NonNull String creationDate,
                         long latestTimestamp) {
-        this(albumName, creationDate, latestTimestamp, null);
+        this(albumName, directoryIcon, creationDate, latestTimestamp, null);
     }
 
     public void setId(int id) {
@@ -56,6 +63,11 @@ public class ContentAlbum {
     @NonNull
     public String getAlbumName() {
         return albumName;
+    }
+
+    @NonNull
+    public String getDirectoryIcon() {
+        return directoryIcon;
     }
 
     @NonNull

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/grid_span_two"
+        android:title="@string/grid_span_of_two"/>
+    <item
+        android:id="@+id/grid_span_three"
+        android:title="@string/grid_span_of_three"/>
+    <item
+        android:id="@+id/grid_span_four"
+        android:title="@string/grid_span_of_four"/>
+    <item
+        android:id="@+id/grid_span_five"
+        android:title="@string/grid_span_of_five"/>
+</menu>

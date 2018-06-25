@@ -92,7 +92,11 @@ public class CreateAlbumDialog extends DialogFragment {
 
     private void onCreateClicked() {
         if (isValidName(dialogBinding.dialogTextAlbum, albumName)) {
-            albumViewModel.createNewAlbum(albumName, userContentList);
+            if (TextUtils.isEmpty(albumTag)) {
+                albumViewModel.createNewAlbum(albumName, null, userContentList);
+            } else {
+                albumViewModel.createNewAlbum(albumName, albumTag, userContentList);
+            }
             dismiss();
         }
     }

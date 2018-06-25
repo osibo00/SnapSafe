@@ -7,17 +7,15 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.widget.Button;
 
-import java.util.Objects;
-
 import productions.darthplagueis.contentvault.R;
 import productions.darthplagueis.contentvault.photos.UserContentViewModel;
 
-public class DeleteDialog extends DialogFragment {
+public class CopyDialog extends DialogFragment {
 
     private UserContentViewModel contentViewModel;
 
-    public static DeleteDialog newInstance(UserContentViewModel viewModel) {
-        DeleteDialog dialog = new DeleteDialog();
+    public static CopyDialog newInstance(UserContentViewModel viewModel) {
+        CopyDialog dialog = new CopyDialog();
         dialog.contentViewModel = viewModel;
         return dialog;
     }
@@ -26,11 +24,11 @@ public class DeleteDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog alertDialog = new AlertDialog.Builder((getContext()))
-                .setMessage(R.string.delete_dialog_message)
+                .setMessage(R.string.make_copies)
                 .setPositiveButton(R.string.dialog_yes, null)
                 .setNegativeButton(R.string.dialog_cancel, null)
                 .create();
-        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCanceledOnTouchOutside(true);
         alertDialog.setOnShowListener(dialog -> onDialogShow(alertDialog));
         return alertDialog;
     }
@@ -43,8 +41,7 @@ public class DeleteDialog extends DialogFragment {
     }
 
     private void onYesCLicked() {
-        contentViewModel.deleteSelected();
+        contentViewModel.copySelected();
         dismiss();
     }
 }
-

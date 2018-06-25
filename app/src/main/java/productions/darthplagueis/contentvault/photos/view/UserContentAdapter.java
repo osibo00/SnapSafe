@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.util.List;
@@ -88,6 +90,8 @@ public class UserContentAdapter extends RecyclerView.Adapter<UserContentAdapter.
         void onBind(UserContent userContent) {
             Glide.with(binding.getRoot())
                     .load(new File(userContent.getFilePath()))
+                    .thumbnail(0.5f)
+                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
                     .into(binding.photoImageView);
 
             displaySelectionStatus();
