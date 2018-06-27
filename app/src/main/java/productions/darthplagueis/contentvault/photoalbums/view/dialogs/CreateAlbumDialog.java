@@ -1,19 +1,16 @@
-package productions.darthplagueis.contentvault.photos.view.dialogs;
+package productions.darthplagueis.contentvault.photoalbums.view.dialogs;
 
 import android.app.Dialog;
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +18,7 @@ import android.widget.Button;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import productions.darthplagueis.contentvault.R;
 import productions.darthplagueis.contentvault.ViewModelFactory;
@@ -28,8 +26,7 @@ import productions.darthplagueis.contentvault.data.ContentAlbum;
 import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.databinding.NewAlbumDialogBinding;
 import productions.darthplagueis.contentvault.photoalbums.ContentAlbumViewModel;
-import productions.darthplagueis.contentvault.photos.UserContentViewModel;
-import productions.darthplagueis.contentvault.util.CurrentDateUtil;
+import productions.darthplagueis.contentvault.util.FileManager;
 
 public class CreateAlbumDialog extends DialogFragment {
 
@@ -54,21 +51,23 @@ public class CreateAlbumDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setViews();
 
-        ViewModelFactory factory = ViewModelFactory.getINSTANCE(
-                Objects.requireNonNull(getActivity()).getApplication());
-        albumViewModel = ViewModelProviders.of(getActivity(), factory).get(ContentAlbumViewModel.class);
-        albumViewModel.getAllAlbums().observe(this, contentAlbums -> {
-            if (contentAlbums != null) {
-                for (ContentAlbum album : contentAlbums) {
-                    userAlbumList.add(album.getAlbumName());
+        if (getActivity() != null) {
+            ViewModelFactory factory = ViewModelFactory.getINSTANCE(getActivity().getApplication());
+            albumViewModel = ViewModelProviders.of(getActivity(), factory).get(ContentAlbumViewModel.class);
+            albumViewModel.getAllAlbums().observe(this, contentAlbums -> {
+                if (contentAlbums != null) {
+                    for (ContentAlbum album : contentAlbums) {
+                        userAlbumList.add(album.getAlbumName());
+                    }
                 }
-            }
-        });
-
-        AlertDialog alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
+            });
+        }
+        Context context = Objects.requireNonNull(getContext(), "Context must not be null.");
+        AlertDialog alertDialog = new AlertDialog.Builder(context)
                 .setView(dialogBinding.getRoot())
                 .setTitle(R.string.album_dialog_title)
                 .setMessage(R.string.album_dialog_message)
+                .setIcon(R.drawable.ic_create_new_folder_green_24dp)
                 .setPositiveButton(R.string.positive_btn_create, null)
                 .setNegativeButton(R.string.dialog_cancel, null)
                 .create();
@@ -102,13 +101,18 @@ public class CreateAlbumDialog extends DialogFragment {
     }
 
     private boolean isValidName(TextInputLayout layout, String name) {
+        Pattern specialCharacters = Pattern.compile("[^a-zA-Z0-9 ]");
         if (TextUtils.isEmpty(name)) {
             layout.setErrorEnabled(true);
             layout.setError(getString(R.string.album_dialog_empty));
             return false;
-        } else if (userAlbumList.contains(name)) {
+        } else if (userAlbumList.contains(name) || name.equalsIgnoreCase(FileManager.DEFAULT_DIRECTORY_TAG)) {
             layout.setErrorEnabled(true);
             layout.setError(String.format(getString(R.string.create_dialog_exists_error), name));
+            return false;
+        } else if (specialCharacters.matcher(name).find()) {
+            layout.setErrorEnabled(true);
+            layout.setError(getString(R.string.album_name_special_chars));
             return false;
         }
 
@@ -126,12 +130,13 @@ public class CreateAlbumDialog extends DialogFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                dialogBinding.dialogTextAlbum.setErrorEnabled(false);
+                dialogBinding.dialogTextAlbum.setError("");
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                albumName = s.toString();
+                albumName = s.toString().trim();
                 dialogBinding.dialogTextTag.setVisibility(View.VISIBLE);
             }
         });
@@ -148,7 +153,7 @@ public class CreateAlbumDialog extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                albumTag = s.toString();
+                albumTag = s.toString().trim();
             }
         });
     }

@@ -1,18 +1,14 @@
 package productions.darthplagueis.contentvault.photoalbums;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.util.List;
@@ -69,6 +65,8 @@ public class ContentAlbumAdapter extends RecyclerView.Adapter<ContentAlbumAdapte
         void onBind(ContentAlbum item) {
             Glide.with(itemBinding.getRoot())
                     .load(new File(item.getDirectoryIcon()))
+                    .thumbnail(0.5f)
+                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
                     .into(itemBinding.albumImageView);
 
             itemBinding.albumText.setText(item.getAlbumName());

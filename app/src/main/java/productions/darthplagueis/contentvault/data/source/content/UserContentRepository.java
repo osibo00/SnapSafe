@@ -4,20 +4,25 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import productions.darthplagueis.contentvault.data.UserContent;
+import productions.darthplagueis.contentvault.util.AppExecutors;
 
-public class UserContentRepository {
+public class UserContentRepository implements UserContentCallBack {
 
     private LiveData<List<UserContent>> userContentList;
+
+    private AppExecutors appExecutors;
 
     private UserContentDao userContentDao;
 
     public UserContentRepository(Application application) {
         UserContentDatabase db = UserContentDatabase.getDatabase(application);
         userContentDao = db.userContentDao();
+        appExecutors = new AppExecutors();
         userContentList = userContentDao.getDescendingDateOrder();
     }
 
@@ -43,6 +48,14 @@ public class UserContentRepository {
 
     public LiveData<List<UserContent>> getLastItemByDirectory(String directoryName) {
         return userContentDao.getLastItem(directoryName);
+    }
+
+    public void getUserContentList(GetUserContentCallBack callBack) {
+        Runnable runnable = () -> {
+            List<UserContent> userContents = userContentDao.getUserContentList();
+            appExecutors.getMainThread().execute(() -> callBack.onContentListRetrieved(userContents));
+        };
+        appExecutors.getDatabaseThread().execute(runnable);
     }
 
     public int getItemCount() {

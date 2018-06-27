@@ -44,7 +44,7 @@
 
     <style name="action_toolbar_button" parent="Widget.AppCompat.ImageButton">
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:foreground">?android:attr/selectableItemBackgroundBorderless</item>
     </style>
 
     <style name="FontHeading20sp" parent="@android:style/TextAppearance">

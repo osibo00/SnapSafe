@@ -8,14 +8,13 @@
         <import type="android.view.View" />
 
         <variable
-            name="viewmodel"
+            name="contentViewModel"
             type="productions.darthplagueis.contentvault.photos.UserContentViewModel" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -47,6 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="?android:attr/actionBarSize"
+            android:background="@color/colorSurfaceDark"
             android:clipToPadding="false"
             android:scrollbars="vertical" />
 
@@ -54,15 +54,15 @@
             android:id="@+id/fab_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/accent38alpha"
-            android:onClick="@{() -> viewmodel.closeFab()}"
-            android:visibility="@{viewmodel.isFabExtending ? View.VISIBLE : View.GONE}"
+            android:background="@color/accent25alpha"
+            android:onClick="@{() -> contentViewModel.closeFab()}"
+            android:visibility="@{contentViewModel.isFabExtending ? View.VISIBLE : View.GONE}"
             tools:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/fab_layout03"
-            closeAnimation="@{viewmodel.isFabClosing}"
-            openAnimation="@{viewmodel.isFabExtending}"
+            closeAnimation="@{contentViewModel.isFabClosing}"
+            openAnimation="@{contentViewModel.isFabExtending}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
@@ -71,7 +71,7 @@
             android:clipToPadding="false"
             android:gravity="center_vertical"
             android:padding="@dimen/childView_margin"
-            android:visibility="@{viewmodel.isFabExtending ? View.VISIBLE : View.GONE}"
+            android:visibility="@{contentViewModel.isFabExtending ? View.VISIBLE : View.GONE}"
             tools:visibility="visible">
 
             <android.support.v7.widget.CardView
@@ -94,7 +94,7 @@
                 android:id="@+id/mini_fab03"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> viewmodel.selectPhotos()}"
+                android:onClick="@{() -> contentViewModel.selectPhotos()}"
                 app:backgroundTint="@color/md_mini_fab_color03"
                 app:elevation="@dimen/fab_elevation"
                 app:fabSize="mini"
@@ -105,8 +105,8 @@
 
         <LinearLayout
             android:id="@+id/fab_layout02"
-            closeAnimation="@{viewmodel.isFabClosing}"
-            openAnimation="@{viewmodel.isFabExtending}"
+            closeAnimation="@{contentViewModel.isFabClosing}"
+            openAnimation="@{contentViewModel.isFabExtending}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
@@ -115,7 +115,7 @@
             android:clipToPadding="false"
             android:gravity="center_vertical"
             android:padding="@dimen/childView_margin"
-            android:visibility="@{viewmodel.isFabExtending ? View.VISIBLE : View.GONE}"
+            android:visibility="@{contentViewModel.isFabExtending ? View.VISIBLE : View.GONE}"
             tools:visibility="visible">
 
             <android.support.v7.widget.CardView
@@ -148,8 +148,8 @@
 
         <LinearLayout
             android:id="@+id/fab_layout01"
-            closeAnimation="@{viewmodel.isFabClosing}"
-            openAnimation="@{viewmodel.isFabExtending}"
+            closeAnimation="@{contentViewModel.isFabClosing}"
+            openAnimation="@{contentViewModel.isFabExtending}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
@@ -158,7 +158,7 @@
             android:clipToPadding="false"
             android:gravity="center_vertical"
             android:padding="@dimen/childView_margin"
-            android:visibility="@{viewmodel.isFabExtending ? View.VISIBLE : View.GONE}"
+            android:visibility="@{contentViewModel.isFabExtending ? View.VISIBLE : View.GONE}"
             tools:visibility="visible">
 
             <android.support.v7.widget.CardView
@@ -181,7 +181,7 @@
                 android:id="@+id/mini_fab01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> viewmodel.importPhotos()}"
+                android:onClick="@{() -> contentViewModel.importPhotos()}"
                 app:backgroundTint="@color/md_mini_fab_color01"
                 app:elevation="@dimen/fab_elevation"
                 app:fabSize="mini"
@@ -202,11 +202,11 @@
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/photos_fab"
-                closeAnimation="@{viewmodel.isFabClosing}"
-                openAnimation="@{viewmodel.isFabExtending}"
+                closeAnimation="@{contentViewModel.isFabClosing}"
+                openAnimation="@{contentViewModel.isFabExtending}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> viewmodel.extendFab()}"
+                android:onClick="@{() -> contentViewModel.extendFab()}"
                 app:elevation="@dimen/fab_elevation"
                 app:fabSize="normal"
                 app:rippleColor="@color/black38alpha"

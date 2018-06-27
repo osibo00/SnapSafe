@@ -54,6 +54,9 @@ public interface UserContentDao {
     @Query("SELECT * from user_content WHERE import_date LIKE :date")
     LiveData<List<UserContent>> getContentByDate(String date);
 
+    @Query("SELECT * from user_content ORDER BY time_stamp DESC")
+    List<UserContent> getUserContentList();
+
     @Update(onConflict = REPLACE)
     void updateUserContent(UserContent... userContents);
 

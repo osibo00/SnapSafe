@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.File;
 import java.util.List;
@@ -20,8 +21,8 @@ public class ContentAlbumViewModel extends AndroidViewModel implements FileManag
 
     private FileManager fileManager = new FileManager(getApplication());
 
-    private ContentAlbumRepository albumRepository;
-    private UserContentRepository contentRepository;
+    private final ContentAlbumRepository albumRepository;
+    private final UserContentRepository contentRepository;
 
     public ContentAlbumViewModel(@NonNull Application application) {
         super(application);
@@ -62,16 +63,14 @@ public class ContentAlbumViewModel extends AndroidViewModel implements FileManag
     }
 
     public void createNewAlbum(String albumName, String tag, List<UserContent> itemsSelectedList) {
-        if (itemsSelectedList.size() != 0) {
-            fileManager.setNewDirectoryName(albumName);
+        if (itemsSelectedList != null) {
             for (int i = 0; i < itemsSelectedList.size(); i++) {
                 UserContent itemSelected = itemsSelectedList.get(i);
                 itemSelected.setContentTag(tag);
-                //fileManager.setCurrentDirectoryName(itemSelected.getFileDirectory());
                 if (i == 0) {
-                    fileManager.moveFileAsync(itemSelected, true, this);
+                    fileManager.moveFileAsync(itemSelected, albumName, true, this);
                 } else {
-                    fileManager.moveFileAsync(itemSelected, false, this);
+                    fileManager.moveFileAsync(itemSelected, albumName, false, this);
                 }
             }
         }
@@ -99,5 +98,4 @@ public class ContentAlbumViewModel extends AndroidViewModel implements FileManag
         userContent.setFileDirectory(file.getParentFile().getName().substring(4));
         updateUserContent(userContent);
     }
-
 }
