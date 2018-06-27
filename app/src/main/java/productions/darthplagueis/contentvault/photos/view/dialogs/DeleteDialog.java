@@ -1,6 +1,7 @@
 package productions.darthplagueis.contentvault.photos.view.dialogs;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -25,8 +26,11 @@ public class DeleteDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog alertDialog = new AlertDialog.Builder((getContext()))
+        Context context = Objects.requireNonNull(getContext(), "Context must not be null.");
+        AlertDialog alertDialog = new AlertDialog.Builder(context)
+                .setTitle(R.string.delete)
                 .setMessage(R.string.delete_dialog_message)
+                .setIcon(R.drawable.ic_delete_green_24dp)
                 .setPositiveButton(R.string.dialog_yes, null)
                 .setNegativeButton(R.string.dialog_cancel, null)
                 .create();

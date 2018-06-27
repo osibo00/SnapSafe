@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import productions.darthplagueis.contentvault.photoalbums.AlbumsFragment;
+import productions.darthplagueis.contentvault.photoalbums.view.AlbumsFragment;
 import productions.darthplagueis.contentvault.photoalbums.ContentAlbumViewModel;
 import productions.darthplagueis.contentvault.photos.ContentItemNavigator;
 import productions.darthplagueis.contentvault.photodetail.DetailPhotoViewModel;
@@ -25,6 +25,7 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
     public static final int PICK_IMAGE_CODE_TAG = 1987;
 
     private PhotosFragment photosFragment;
+    private AlbumsFragment albumsFragment;
 
     private BottomNavigationView navigation;
 
@@ -41,6 +42,11 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
         BottomNavigationViewUtil.disableShiftMode(navigation);
         setNavigationListener();
 
+        photosFragment =
+                (PhotosFragment) getSupportFragmentManager().findFragmentByTag("PHOTOS_TAG");
+        albumsFragment =
+                (AlbumsFragment) getSupportFragmentManager().findFragmentByTag("ALBUMS_TAG");
+
         setupPhotosFragment();
 
         contentViewModel = obtainContentViewModel(this);
@@ -50,8 +56,6 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
         });
         DetailPhotoViewModel detailViewModel = obtainDetailViewModel(this);
         detailViewModel.getNewBackButtonEvent().observe(this, aVoid -> onBackPressed());
-
-        Log.d("fragact", "onCreate: " + contentViewModel.getItemCount());
     }
 
     @Override
@@ -71,9 +75,12 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
 
     @Override
     public void openPhotoDetails(String filePath) {
-        setNavigationVisibility();
-        ActivityUtil.addFragmentInActivity(getSupportFragmentManager(),
-                DetailPhotoFragment.newInstance(filePath), R.id.contentFrame);
+//        setNavigationVisibility();
+//        ActivityUtil.addFragmentInActivity(getSupportFragmentManager(),
+//                DetailPhotoFragment.newInstance(filePath), R.id.contentFrame);
+        Intent intent = new Intent(this, ScrollGalleryActivity.class);
+        intent.putExtra("testing", filePath);
+        startActivity(intent);
     }
 
     public static UserContentViewModel obtainContentViewModel(FragmentActivity activity) {
@@ -106,23 +113,19 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
     }
 
     private void setupPhotosFragment() {
-        photosFragment =
-                (PhotosFragment) getSupportFragmentManager().findFragmentByTag("PHOTOS_TAG");
         if (photosFragment == null) {
             photosFragment = PhotosFragment.newInstance();
-            ActivityUtil.replaceFragmentInActivity(
-                    getSupportFragmentManager(), photosFragment, R.id.contentFrame);
         }
+        ActivityUtil.replaceFragmentInActivity(
+                getSupportFragmentManager(), photosFragment, R.id.contentFrame);
     }
 
     private void setupAlbumsFragment() {
-        AlbumsFragment albumsFragment =
-                (AlbumsFragment) getSupportFragmentManager().findFragmentByTag("ALBUMS_TAG");
         if (albumsFragment == null) {
             albumsFragment = AlbumsFragment.newInstance();
-            ActivityUtil.replaceFragmentInActivity(
-                    getSupportFragmentManager(), albumsFragment, R.id.contentFrame);
         }
+        ActivityUtil.replaceFragmentInActivity(
+                getSupportFragmentManager(), albumsFragment, R.id.contentFrame);
     }
 
     private void importPhotos() {

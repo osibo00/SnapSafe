@@ -15,7 +15,7 @@ import productions.darthplagueis.contentvault.data.UserContent;
 
 public class FileManager implements FileManagerCallBack {
 
-    public static final String DEFAULT_DIRECTORY_TAG = "user_content_album";
+    public static final String DEFAULT_DIRECTORY_TAG = "snapsafe_content";
 
     private String currentDirectoryName = DEFAULT_DIRECTORY_TAG;
     private String newDirectoryName = "";
@@ -65,7 +65,7 @@ public class FileManager implements FileManagerCallBack {
 
     public void saveBitmapAsync(Bitmap bitmap, SaveFileCallBack callBack) {
         Runnable runnable = () -> {
-            File file = new File(directoryCheck(currentDirectoryName), createFileName());
+            File file = new File(directoryCheck(DEFAULT_DIRECTORY_TAG), createFileName());
             FileOutputStream outputStream = null;
             try {
                 outputStream = new FileOutputStream(file);
@@ -112,7 +112,7 @@ public class FileManager implements FileManagerCallBack {
             inputChannel = new FileInputStream(file).getChannel();
             inputChannel.transferTo(0, inputChannel.size(), outputChannel);
             inputChannel.close();
-            deleteFileAsync(fileName);
+            file.delete();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -126,11 +126,10 @@ public class FileManager implements FileManagerCallBack {
         return newFile;
     }
 
-    public void moveFileAsync(UserContent userContent, boolean isAlbumCreation, MoveFileCallBack callBack) {
+    public void moveFileAsync(UserContent userContent, String directoryName, boolean isAlbumCreation, MoveFileCallBack callBack) {
         Runnable runnable = () -> {
-            String fileName = userContent.getFileName();
-            File file = new File(directoryCheck(userContent.getFileDirectory()), fileName);
-            File newFile = new File(directoryCheck(newDirectoryName), createFileName());
+            File file = new File(userContent.getFilePath());
+            File newFile = new File(directoryCheck(directoryName), createFileName());
             FileChannel outputChannel = null;
             FileChannel inputChannel = null;
             try {
@@ -138,17 +137,19 @@ public class FileManager implements FileManagerCallBack {
                 inputChannel = new FileInputStream(file).getChannel();
                 inputChannel.transferTo(0, inputChannel.size(), outputChannel);
                 inputChannel.close();
-                deleteFileAsync(fileName);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 try {
                     if (inputChannel != null) inputChannel.close();
                     if (outputChannel != null) outputChannel.close();
+                    boolean isDeleted = file.delete();
+                    Log.i("FileManager", "Delete: file deleted=" + isDeleted + " file exists=" + file.exists());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+            Log.i("FileManager", "moveFileAsync: newFile exists=" + newFile.exists());
             appExecutors.getMainThread().execute(() -> {
                 if (isAlbumCreation) {
                     callBack.onAlbumCreated(newFile, userContent);
@@ -183,9 +184,9 @@ public class FileManager implements FileManagerCallBack {
         return newFile;
     }
 
-    public void copyFileAsync(String fileName, CopyFileCallBack callBack) {
+    public void copyFileAsync(UserContent userContent, CopyFileCallBack callBack) {
         Runnable runnable = () -> {
-            File file = new File(directoryCheck(currentDirectoryName), fileName);
+            File file = new File(userContent.getFilePath());
             File newFile = new File(directoryCheck(DEFAULT_DIRECTORY_TAG), createFileName());
             FileChannel outputChannel = null;
             FileChannel inputChannel = null;
@@ -209,9 +210,9 @@ public class FileManager implements FileManagerCallBack {
         appExecutors.getDiskIO().execute(runnable);
     }
 
-    public void deleteFileAsync(String fileName) {
+    public void deleteFileAsync(UserContent userContent) {
         Runnable runnable = () -> {
-            File file = new File(directoryCheck(currentDirectoryName), fileName);
+            File file = new File(userContent.getFilePath());
             try {
                 boolean isDeleted = file.delete();
                 Log.i("FileManager", "deleteFileAsync: " + isDeleted);
@@ -225,7 +226,7 @@ public class FileManager implements FileManagerCallBack {
     private File directoryCheck(String directoryName) {
         File directory = context.getDir(directoryName, Context.MODE_PRIVATE);
         if (!directory.exists() && !directory.mkdirs()) {
-            Log.e("FileManager", "Error creating directory " + directory);
+            Log.e("FileManager", "Error creating directory: " + directory);
         }
         return directory;
     }

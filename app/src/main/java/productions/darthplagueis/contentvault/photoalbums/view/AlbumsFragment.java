@@ -1,6 +1,7 @@
-package productions.darthplagueis.contentvault.photoalbums;
+package productions.darthplagueis.contentvault.photoalbums.view;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,8 @@ import java.util.Objects;
 
 import productions.darthplagueis.contentvault.FragmentsActivity;
 import productions.darthplagueis.contentvault.databinding.AlbumsFragmentBinding;
+import productions.darthplagueis.contentvault.photoalbums.ContentAlbumAdapter;
+import productions.darthplagueis.contentvault.photoalbums.ContentAlbumViewModel;
 import productions.darthplagueis.contentvault.util.DimensionsUtil;
 import productions.darthplagueis.contentvault.util.recyclerview.GridSpacingItemDecoration;
 
@@ -26,6 +29,8 @@ public class AlbumsFragment extends Fragment {
     private ContentAlbumViewModel albumViewModel;
 
     private AlbumsFragmentBinding albumsFragmentBinding;
+
+    private Context context;
 
     public static AlbumsFragment newInstance() {
         return new AlbumsFragment();
@@ -48,16 +53,15 @@ public class AlbumsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        context = getContext();
+
         ContentAlbumAdapter albumAdapter = new ContentAlbumAdapter(albumViewModel);
         albumViewModel.getDescDateList().observe(this, albumAdapter::setContentAlbumList);
 
         RecyclerView recyclerView = albumsFragmentBinding.albumRecyclerView;
         recyclerView.setAdapter(albumAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(
-                2,
-                DimensionsUtil.dpToPx(Objects.requireNonNull(getContext()), 16),
-                true));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2,
+                DimensionsUtil.dpToPx(context, 12), true));
     }
 }

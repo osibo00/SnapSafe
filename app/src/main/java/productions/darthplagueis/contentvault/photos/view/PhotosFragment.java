@@ -1,28 +1,20 @@
 package productions.darthplagueis.contentvault.photos.view;
 
 
-import android.arch.lifecycle.Observer;
-import android.content.res.Resources;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
-import java.util.Objects;
 
 import productions.darthplagueis.contentvault.BR;
 import productions.darthplagueis.contentvault.FragmentsActivity;
@@ -32,7 +24,7 @@ import productions.darthplagueis.contentvault.databinding.PhotosFragmentBinding;
 import productions.darthplagueis.contentvault.photos.LayoutManagerType;
 import productions.darthplagueis.contentvault.photos.UserContentViewModel;
 import productions.darthplagueis.contentvault.photos.view.dialogs.CopyDialog;
-import productions.darthplagueis.contentvault.photos.view.dialogs.CreateAlbumDialog;
+import productions.darthplagueis.contentvault.photoalbums.view.dialogs.CreateAlbumDialog;
 import productions.darthplagueis.contentvault.photos.view.dialogs.DeleteDialog;
 import productions.darthplagueis.contentvault.util.DimensionsUtil;
 import productions.darthplagueis.contentvault.util.StatusBarColorUtil;
@@ -47,9 +39,13 @@ public class PhotosFragment extends Fragment {
 
     private UserContentAdapter contentAdapter;
 
+    private GridSpacingItemDecoration itemDecoration = null;
+
     private UserContentViewModel contentViewModel;
 
     private PhotosFragmentBinding photosFragmentBinding;
+
+    private Context context;
 
     public PhotosFragment() {
         // Required empty public constructor
@@ -63,15 +59,18 @@ public class PhotosFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         photosFragmentBinding = PhotosFragmentBinding.inflate(inflater, container, false);
-        contentViewModel = FragmentsActivity.obtainContentViewModel(Objects.requireNonNull(getActivity()));
-        photosFragmentBinding.setViewmodel(contentViewModel);
-        photosFragmentBinding.photoActionBar.setVariable(BR.toolBarViewModel, contentViewModel);
+        if (getActivity() != null) {
+            contentViewModel = FragmentsActivity.obtainContentViewModel(getActivity());
+            photosFragmentBinding.setContentViewModel(contentViewModel);
+            photosFragmentBinding.photoActionBar.setVariable(BR.toolBarViewModel, contentViewModel);
+        }
         return photosFragmentBinding.getRoot();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        context = getContext();
 
         contentAdapter = new UserContentAdapter(contentViewModel);
         contentViewModel.getDescDateList().observe(this, contentAdapter::setUserContentList);
@@ -101,7 +100,7 @@ public class PhotosFragment extends Fragment {
                 createFilteringPopup());
 
         photosFragmentBinding.galleryRecyclerView.setAdapter(contentAdapter);
-        setRecyclerViewLayoutManager(LayoutManagerType.GRID_LAYOUT_MANAGER_SPAN_FOUR);
+        setRecyclerViewLayoutManager(LayoutManagerType.GRID_SPAN_FOUR);
     }
 
     private void createDeleteDialog() {
@@ -121,7 +120,7 @@ public class PhotosFragment extends Fragment {
 
     private void createSortingPopup() {
         PopupMenu popupMenu = new PopupMenu(
-                getContext(), photosFragmentBinding.photoActionBar.sortBtn, Gravity.END);
+                context, photosFragmentBinding.photoActionBar.sortBtn, Gravity.END);
         popupMenu.getMenuInflater().inflate(R.menu.sorting_menu, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
@@ -150,21 +149,21 @@ public class PhotosFragment extends Fragment {
 
     private void createFilteringPopup() {
         PopupMenu popupMenu = new PopupMenu(
-                getContext(), photosFragmentBinding.photoActionBar.filterBtn, Gravity.END);
+                context, photosFragmentBinding.photoActionBar.filterBtn, Gravity.END);
         popupMenu.getMenuInflater().inflate(R.menu.filter_menu, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.grid_span_two:
-                    setRecyclerViewLayoutManager(LayoutManagerType.GRID_LAYOUT_MANAGER_SPAN_TWO);
+                    setRecyclerViewLayoutManager(LayoutManagerType.GRID_SPAN_TWO);
                     return true;
                 case R.id.grid_span_three:
-                    setRecyclerViewLayoutManager(LayoutManagerType.GRID_LAYOUT_MANAGER_SPAN_THREE);
+                    setRecyclerViewLayoutManager(LayoutManagerType.GRID_SPAN_THREE);
                     return true;
                 case R.id.grid_span_four:
-                    setRecyclerViewLayoutManager(LayoutManagerType.GRID_LAYOUT_MANAGER_SPAN_FOUR);
+                    setRecyclerViewLayoutManager(LayoutManagerType.GRID_SPAN_FOUR);
                     return true;
                 case R.id.grid_span_five:
-                    setRecyclerViewLayoutManager(LayoutManagerType.GRID_LAYOUT_MANAGER_SPAN_FIVE);
+                    setRecyclerViewLayoutManager(LayoutManagerType.GRID_SPAN_FIVE);
                     return true;
                 default:
                     return false;
@@ -180,36 +179,39 @@ public class PhotosFragment extends Fragment {
             scrollPosition = ((GridLayoutManager) recyclerView.getLayoutManager())
                     .findFirstCompletelyVisibleItemPosition();
         }
+        if (itemDecoration != null) {
+            recyclerView.removeItemDecoration(itemDecoration);
+        }
         RecyclerView.LayoutManager layoutManager;
         switch (layoutManagerType) {
-            case GRID_LAYOUT_MANAGER_SPAN_TWO:
-                layoutManager = new GridLayoutManager(getContext(), 2);
-                setItemDecoration(recyclerView, 2, 0, false);
+            case GRID_SPAN_TWO:
+                layoutManager = new GridLayoutManager(context, 2);
+                itemDecoration = spacingItemDecoration(2, 4, false);
                 break;
-            case GRID_LAYOUT_MANAGER_SPAN_THREE:
-                layoutManager = new GridLayoutManager(getContext(), 3);
-                setItemDecoration(recyclerView, 3, 0, false);
+            case GRID_SPAN_THREE:
+                layoutManager = new GridLayoutManager(context, 3);
+                itemDecoration = spacingItemDecoration(3, 4, true);
                 break;
-            case GRID_LAYOUT_MANAGER_SPAN_FOUR:
-                layoutManager = new GridLayoutManager(getContext(), 4);
-                setItemDecoration(recyclerView, 4, 4, false);
+            case GRID_SPAN_FOUR:
+                layoutManager = new GridLayoutManager(context, 4);
+                itemDecoration = spacingItemDecoration(4, 3, true);
                 break;
-            case GRID_LAYOUT_MANAGER_SPAN_FIVE:
-                layoutManager = new GridLayoutManager(getContext(), 5);
-                setItemDecoration(recyclerView, 5, 0, false);
+            case GRID_SPAN_FIVE:
+                layoutManager = new GridLayoutManager(context, 5);
+                itemDecoration = spacingItemDecoration(5, 3, false);
                 break;
             default:
-                layoutManager = new GridLayoutManager(getContext(), 4);
-                setItemDecoration(recyclerView, 4, 4, false);
+                layoutManager = new GridLayoutManager(context, 4);
+                itemDecoration = spacingItemDecoration(4, 3, true);
                 break;
         }
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(itemDecoration);
         recyclerView.scrollToPosition(scrollPosition);
     }
 
-    private void setItemDecoration(RecyclerView rV, int spanCount, int spacing, boolean includesEdge) {
-        rV.addItemDecoration(
-                new GridSpacingItemDecoration(
-                        spanCount, DimensionsUtil.dpToPx(getContext(), spacing), includesEdge));
+    private GridSpacingItemDecoration spacingItemDecoration(int spanCount, int spacing, boolean includesEdge) {
+        return new GridSpacingItemDecoration(
+                spanCount, DimensionsUtil.dpToPx(context, spacing), includesEdge);
     }
 }

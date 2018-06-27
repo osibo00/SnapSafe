@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 
 import java.io.File;
@@ -67,7 +68,7 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
 
     private FileManager fileManager = new FileManager(getApplication());
 
-    private UserContentRepository contentRepository;
+    private final UserContentRepository contentRepository;
 
     public UserContentViewModel(@NonNull Application application) {
         super(application);
@@ -247,19 +248,17 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
 
     public void deleteSelected() {
         if (itemsSelectedList.size() != 0) {
-            for (UserContent item : itemsSelectedList) {
-                fileManager.setCurrentDirectoryName(item.getFileDirectory());
-                fileManager.deleteFileAsync(item.getFileName());
-                delete(item);
+            for (UserContent itemSelected : itemsSelectedList) {
+                fileManager.deleteFileAsync(itemSelected);
+                delete(itemSelected);
             }
         }
     }
 
     public void copySelected() {
         if (itemsSelectedList.size() != 0) {
-            for (UserContent item : itemsSelectedList) {
-                fileManager.setCurrentDirectoryName(item.getFileDirectory());
-                fileManager.copyFileAsync(item.getFileName(), this);
+            for (UserContent itemSelected : itemsSelectedList) {
+                fileManager.copyFileAsync(itemSelected, this);
             }
         }
     }
@@ -291,7 +290,6 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
     }
 
     private void convertToBitmap(Uri uri) {
-        fileManager.setCurrentDirectoryName(FileManager.DEFAULT_DIRECTORY_TAG);
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(
                     (getApplication().getApplicationContext()).getContentResolver(), uri);
@@ -305,6 +303,8 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
         insert(new UserContent(file.getName(), CurrentDateUtil.getDateString(),
                 CurrentDateUtil.getTimeStamp(), file.getAbsolutePath(),
                 file.getParentFile().getName().substring(4)));
+        Log.d("UCVM", "createContentEntity: " + file.getName() + " " + file.getAbsolutePath()
+                + " " + file.getParentFile().getName().substring(4));
     }
 
     private static void setAnimation(View view, boolean isExtending) {

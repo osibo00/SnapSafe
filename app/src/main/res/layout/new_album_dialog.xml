@@ -5,14 +5,14 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingEnd="?dialogPreferredPadding"
+        android:paddingStart="?dialogPreferredPadding">
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/dialog_text_album"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingEnd="?dialogPreferredPadding"
-            android:paddingStart="?dialogPreferredPadding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -32,8 +32,6 @@
             android:id="@+id/dialog_text_tag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingEnd="?dialogPreferredPadding"
-            android:paddingStart="?dialogPreferredPadding"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
