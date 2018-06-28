@@ -26,7 +26,7 @@ import productions.darthplagueis.contentvault.data.ContentAlbum;
 import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.databinding.NewAlbumDialogBinding;
 import productions.darthplagueis.contentvault.photoalbums.ContentAlbumViewModel;
-import productions.darthplagueis.contentvault.util.FileManager;
+import productions.darthplagueis.contentvault.util.filemanager.FileManager;
 
 public class CreateAlbumDialog extends DialogFragment {
 

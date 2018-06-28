@@ -1,4 +1,4 @@
-package productions.darthplagueis.contentvault.scrollingphotos.view;
+package productions.darthplagueis.contentvault.scrollingphotos;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,15 +7,19 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.List;
 
 import productions.darthplagueis.contentvault.data.UserContent;
+import productions.darthplagueis.contentvault.scrollingphotos.ScrollingPhotoViewModel;
 import productions.darthplagueis.contentvault.scrollingphotos.view.ScrollingPhotoFragment;
 
 public class ScrollingPageAdapter extends FragmentStatePagerAdapter {
 
     private final List<UserContent> userContentList;
 
-    public ScrollingPageAdapter(FragmentManager fm, List<UserContent> userContents) {
+    private final ScrollingPhotoViewModel photoViewModel;
+
+    public ScrollingPageAdapter(FragmentManager fm, ScrollingPhotoViewModel photoViewModel, List<UserContent> userContents) {
         super(fm);
         this.userContentList = userContents;
+        this.photoViewModel = photoViewModel;
     }
 
     @Override
@@ -23,6 +27,7 @@ public class ScrollingPageAdapter extends FragmentStatePagerAdapter {
         Fragment fragment = null;
         if (position < userContentList.size()) {
             fragment = ScrollingPhotoFragment.newInstance(userContentList.get(position).getFilePath());
+            photoViewModel.currentPageAdapterPosition(position);
         }
         return fragment;
     }
@@ -30,13 +35,5 @@ public class ScrollingPageAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return userContentList.size();
-    }
-
-    public void lookUpContentItem(String filePath) {
-        for (UserContent item : userContentList) {
-            if (filePath == item.getFilePath()) {
-                getItem(userContentList.indexOf(item));
-            }
-        }
     }
 }

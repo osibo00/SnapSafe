@@ -7,6 +7,10 @@ import productions.darthplagueis.contentvault.data.UserContent;
 public interface UserContentCallBack {
 
     interface GetUserContentCallBack {
-        void onContentListRetrieved (List<UserContent> userContents);
+        void onContentListRetrieved(List<UserContent> userContents);
+    }
+
+    interface GetUserContentCountCallBack {
+        void onContentCountRetrieved(int count);
     }
 }

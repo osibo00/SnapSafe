@@ -107,9 +107,21 @@
             android:textAppearance="@style/FontHeading20spGreen"
             android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/filter_btn"
+            app:layout_constraintEnd_toStartOf="@id/carousel_btn"
             app:layout_constraintStart_toEndOf="@id/app_btn"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/carousel_btn"
+            style="@style/action_toolbar_button"
+            android:layout_width="@dimen/md_icon_button_margin"
+            android:layout_height="@dimen/md_icon_button_margin"
+            android:onClick="@{() -> toolBarViewModel.useCarouselView()}"
+            android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/sort_btn"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_view_carousel_black_24dp" />
 
         <ImageButton
             android:id="@+id/sort_btn"
@@ -119,27 +131,16 @@
             android:onClick="@{() -> toolBarViewModel.createSortPopup()}"
             android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/filter_btn"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_sort_black_24dp" />
-
-        <ImageButton
-            android:id="@+id/filter_btn"
-            style="@style/action_toolbar_button"
-            android:layout_width="@dimen/md_icon_button_margin"
-            android:layout_height="@dimen/md_icon_button_margin"
-            android:onClick="@{() -> toolBarViewModel.createFilterPopup()}"
-            android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/settings_btn"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_view_carousel_black_24dp" />
+            app:srcCompat="@drawable/ic_sort_black_24dp" />
 
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/settings_btn"
             style="@style/action_toolbar_button"
             android:layout_width="@dimen/md_icon_button_margin"
             android:layout_height="@dimen/md_icon_button_margin"
+            android:onClick="@{() -> toolBarViewModel.createSettingsPopup()}"
             android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

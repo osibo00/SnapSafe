@@ -1,4 +1,4 @@
-package productions.darthplagueis.contentvault.util;
+package productions.darthplagueis.contentvault.util.filemanager;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,33 +12,28 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 import productions.darthplagueis.contentvault.data.UserContent;
+import productions.darthplagueis.contentvault.util.AppExecutors;
+import productions.darthplagueis.contentvault.util.CurrentDateUtil;
 
 public class FileManager implements FileManagerCallBack {
 
     public static final String DEFAULT_DIRECTORY_TAG = "snapsafe_content";
 
     private String currentDirectoryName = DEFAULT_DIRECTORY_TAG;
-    private String newDirectoryName = "";
     private String fileExtension = ".jpg";
 
     private Context context;
 
     private AppExecutors appExecutors;
 
+    public static FileManager newInstance(Context context) {
+        FileManager fileManager = new FileManager();
+        fileManager.context = context;
+        fileManager.appExecutors = new AppExecutors();
+        return fileManager;
+    }
+
     private FileManager() {
-    }
-
-    public FileManager(Context context) {
-        this.context = context;
-        appExecutors = new AppExecutors();
-    }
-
-    public void setCurrentDirectoryName(String currentDirectoryName) {
-        this.currentDirectoryName = currentDirectoryName;
-    }
-
-    public void setNewDirectoryName(String newDirectoryName) {
-        this.newDirectoryName = newDirectoryName;
     }
 
     public void setFileExtension(String fileExtension) {
@@ -104,6 +99,7 @@ public class FileManager implements FileManagerCallBack {
 
     public File moveFile(String fileName) {
         File file = new File(directoryCheck(currentDirectoryName), fileName);
+        String newDirectoryName = "";
         File newFile = new File(directoryCheck(newDirectoryName), createFileName());
         FileChannel outputChannel = null;
         FileChannel inputChannel = null;

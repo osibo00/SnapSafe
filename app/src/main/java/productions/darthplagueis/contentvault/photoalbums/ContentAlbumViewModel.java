@@ -4,7 +4,6 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.io.File;
 import java.util.List;
@@ -14,12 +13,12 @@ import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.data.source.album.ContentAlbumRepository;
 import productions.darthplagueis.contentvault.data.source.content.UserContentRepository;
 import productions.darthplagueis.contentvault.util.CurrentDateUtil;
-import productions.darthplagueis.contentvault.util.FileManager;
-import productions.darthplagueis.contentvault.util.FileManagerCallBack;
+import productions.darthplagueis.contentvault.util.filemanager.FileManager;
+import productions.darthplagueis.contentvault.util.filemanager.FileManagerCallBack;
 
 public class ContentAlbumViewModel extends AndroidViewModel implements FileManagerCallBack.MoveFileCallBack {
 
-    private FileManager fileManager = new FileManager(getApplication());
+    private FileManager fileManager = FileManager.newInstance(getApplication().getApplicationContext());
 
     private final ContentAlbumRepository albumRepository;
     private final UserContentRepository contentRepository;

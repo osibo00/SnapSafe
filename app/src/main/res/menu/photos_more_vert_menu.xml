@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/column_span_menu"
+        android:title="@string/column_span">
+        <menu>
+            <group
+                android:id="@+id/group_1"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/grid_span_two"
+                    android:checked="false"
+                    android:title="@string/grid_span_of_two" />
+                <item
+                    android:id="@+id/grid_span_three"
+                    android:checked="false"
+                    android:title="@string/grid_span_of_three" />
+                <item
+                    android:id="@+id/grid_span_four"
+                    android:checked="false"
+                    android:title="@string/grid_span_of_four" />
+                <item
+                    android:id="@+id/grid_span_five"
+                    android:checked="false"
+                    android:title="@string/grid_span_of_five" />
+            </group>
+        </menu>
+    </item>
+
+    <group android:id="@+id/group_2">
+        <item
+            android:id="@+id/app_settings"
+            android:title="@string/settings" />
+        <item
+            android:id="@+id/app_about"
+            android:title="@string/about" />
+    </group>
+
+</menu>

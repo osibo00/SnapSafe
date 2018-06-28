@@ -6,5 +6,7 @@ import productions.darthplagueis.contentvault.data.UserContent;
 
 public interface ScrollingContentNavigator {
 
-    void onContentScroll(List<UserContent> userContents);
+    void onContentRetrieved(List<UserContent> userContents);
+
+    void onSetViewPagerItem(int position);
 }

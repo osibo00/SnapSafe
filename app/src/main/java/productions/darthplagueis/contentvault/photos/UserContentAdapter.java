@@ -1,4 +1,4 @@
-package productions.darthplagueis.contentvault.photos.view;
+package productions.darthplagueis.contentvault.photos;
 
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
@@ -18,7 +18,6 @@ import java.util.List;
 import productions.darthplagueis.contentvault.R;
 import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.databinding.UserContentItemBinding;
-import productions.darthplagueis.contentvault.photos.UserContentViewModel;
 
 
 public class UserContentAdapter extends RecyclerView.Adapter<UserContentAdapter.UserContentViewHolder> {
@@ -26,12 +25,12 @@ public class UserContentAdapter extends RecyclerView.Adapter<UserContentAdapter.
     private List<UserContent> userContentList;
     private SparseBooleanArray itemStateArray = new SparseBooleanArray();
 
+    private LayoutInflater layoutInflater;
+
     private boolean isMultiSelection;
     private int amountSelected;
 
-    private UserContentViewModel contentViewModel;
-
-    private LayoutInflater layoutInflater;
+    private final UserContentViewModel contentViewModel;
 
     public UserContentAdapter(UserContentViewModel contentViewModel) {
         this.contentViewModel = contentViewModel;
