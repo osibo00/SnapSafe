@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FragmentsActivity">
+        <activity
+            android:name=".FragmentsActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,7 +24,13 @@
         <activity
             android:name=".ScrollGalleryActivity"
             android:label="@string/title_activity_scroll_gallery"
-            android:theme="@style/AppTheme"></activity>
+            android:launchMode="singleInstance"
+            android:parentActivityName=".FragmentsActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".FragmentsActivity" />
+        </activity>
     </application>
 
 </manifest>

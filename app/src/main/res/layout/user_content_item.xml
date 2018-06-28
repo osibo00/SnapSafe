@@ -8,14 +8,9 @@
         <import type="android.view.View" />
 
         <variable
-            name="viewModel"
+            name="itemViewModel"
             type="productions.darthplagueis.contentvault.photos.UserContentViewModel" />
-
-        <variable
-            name="listener"
-            type="productions.darthplagueis.contentvault.photos.PhotosUserActionsListener" />
     </data>
-
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/photo_parent_layout"

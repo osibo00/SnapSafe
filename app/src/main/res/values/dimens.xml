@@ -26,9 +26,11 @@
     <dimen name="drop_down_offset">4dp</dimen>
     <dimen name="drop_down_offset_neg">-4dp</dimen>
     <dimen name="card_corner_radius">2dp</dimen>
+    <dimen name="card_corner_radius_5dp">5dp</dimen>
     <dimen name="card_elevation_6">6dp</dimen>
     <dimen name="circle_image_border">2dp</dimen>
     <dimen name="circle_image_margins">22dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="md_extended_appbar_height">112dp</dimen>
 
 </resources>

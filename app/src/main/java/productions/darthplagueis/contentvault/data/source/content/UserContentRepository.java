@@ -58,13 +58,12 @@ public class UserContentRepository implements UserContentCallBack {
         appExecutors.getDatabaseThread().execute(runnable);
     }
 
-    public int getItemCount() {
-        try {
-            return new countAsyncTask(userContentDao).execute().get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        return 0;
+    public void getUserContentCount(GetUserContentCountCallBack callBack) {
+        Runnable runnable = () -> {
+            int contentCount = userContentDao.countUserItemTotal();
+            appExecutors.getMainThread().execute(() -> callBack.onContentCountRetrieved(contentCount));
+        };
+        appExecutors.getDatabaseThread().execute(runnable);
     }
 
     public void insert(UserContent userContent) {
@@ -121,25 +120,6 @@ public class UserContentRepository implements UserContentCallBack {
         protected Void doInBackground(UserContent... userContent) {
             asyncTaskDao.delete(userContent[0]);
             return null;
-        }
-    }
-
-    private static class countAsyncTask extends AsyncTask<Void, Void, Integer> {
-
-        private UserContentDao asyncTaskDao;
-
-        countAsyncTask(UserContentDao dao) {
-            asyncTaskDao = dao;
-        }
-
-        @Override
-        protected Integer doInBackground(Void... voids) {
-            return asyncTaskDao.countUserItemTotal();
-        }
-
-        @Override
-        protected void onPostExecute(Integer integer) {
-            super.onPostExecute(integer);
         }
     }
 }

@@ -1,4 +1,4 @@
-package productions.darthplagueis.contentvault.util;
+package productions.darthplagueis.contentvault.util.filemanager;
 
 import java.io.File;
 

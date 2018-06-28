@@ -6,12 +6,10 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import productions.darthplagueis.contentvault.photoalbums.view.AlbumsFragment;
 import productions.darthplagueis.contentvault.photoalbums.ContentAlbumViewModel;
-import productions.darthplagueis.contentvault.photos.ContentItemNavigator;
 import productions.darthplagueis.contentvault.photodetail.DetailPhotoViewModel;
 import productions.darthplagueis.contentvault.photodetail.DetailPhotoFragment;
 import productions.darthplagueis.contentvault.photos.view.PhotosFragment;
@@ -19,7 +17,7 @@ import productions.darthplagueis.contentvault.photos.UserContentViewModel;
 import productions.darthplagueis.contentvault.util.ActivityUtil;
 import productions.darthplagueis.contentvault.util.BottomNavigationViewUtil;
 
-public class FragmentsActivity extends AppCompatActivity implements ContentItemNavigator {
+public class FragmentsActivity extends AppCompatActivity implements ActivityNavigator {
 
     public static final String ACTION_PICK_PHOTOS_TAG = "ACTION_PICK_PHOTOS_TAG";
     public static final int PICK_IMAGE_CODE_TAG = 1987;
@@ -50,10 +48,10 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
         setupPhotosFragment();
 
         contentViewModel = obtainContentViewModel(this);
-        contentViewModel.getNewPhotoImportEvent().observe(this, aVoid -> importPhotos());
-        contentViewModel.getNewPhotoDetailEvent().observe(this, s -> {
-            if (s != null) openPhotoDetails(s);
-        });
+        contentViewModel.getNewPhotoImportEvent().observe(this, aVoid -> createImportIntent());
+        contentViewModel.getNewCarouselEvent().observe(this, aVoid -> createCarouselView());
+        contentViewModel.getNewPhotoDetailEvent().observe(this, this::createDetailedView);
+
         DetailPhotoViewModel detailViewModel = obtainDetailViewModel(this);
         detailViewModel.getNewBackButtonEvent().observe(this, aVoid -> onBackPressed());
     }
@@ -74,13 +72,24 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
     }
 
     @Override
-    public void openPhotoDetails(String filePath) {
-//        setNavigationVisibility();
-//        ActivityUtil.addFragmentInActivity(getSupportFragmentManager(),
-//                DetailPhotoFragment.newInstance(filePath), R.id.contentFrame);
-        Intent intent = new Intent(this, ScrollGalleryActivity.class);
-        intent.putExtra("testing", filePath);
-        startActivity(intent);
+    public void createImportIntent() {
+        Intent importPhotosIntent = new Intent(Intent.ACTION_PICK);
+        importPhotosIntent.setType("image/*");
+        importPhotosIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        startActivityForResult(Intent.createChooser(
+                importPhotosIntent, ACTION_PICK_PHOTOS_TAG), PICK_IMAGE_CODE_TAG);
+    }
+
+    @Override
+    public void createDetailedView(String filePath) {
+        setNavigationVisibility();
+        ActivityUtil.addFragmentInActivity(getSupportFragmentManager(),
+                DetailPhotoFragment.newInstance(filePath), R.id.contentFrame);
+    }
+
+    @Override
+    public void createCarouselView() {
+        startActivity(new Intent(this, ScrollGalleryActivity.class));
     }
 
     public static UserContentViewModel obtainContentViewModel(FragmentActivity activity) {
@@ -126,13 +135,6 @@ public class FragmentsActivity extends AppCompatActivity implements ContentItemN
         }
         ActivityUtil.replaceFragmentInActivity(
                 getSupportFragmentManager(), albumsFragment, R.id.contentFrame);
-    }
-
-    private void importPhotos() {
-        Intent importPhotosIntent = new Intent(Intent.ACTION_PICK);
-        importPhotosIntent.setType("image/*");
-        importPhotosIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        startActivityForResult(Intent.createChooser(importPhotosIntent, ACTION_PICK_PHOTOS_TAG), PICK_IMAGE_CODE_TAG);
     }
 
     private void setNavigationListener() {

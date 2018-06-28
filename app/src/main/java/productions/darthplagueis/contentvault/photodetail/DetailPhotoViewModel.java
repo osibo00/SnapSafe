@@ -4,11 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
-import java.util.List;
-
 import productions.darthplagueis.contentvault.SingleLiveEvent;
-import productions.darthplagueis.contentvault.data.UserContent;
-import productions.darthplagueis.contentvault.util.FileManager;
 
 public class DetailPhotoViewModel extends AndroidViewModel {
 

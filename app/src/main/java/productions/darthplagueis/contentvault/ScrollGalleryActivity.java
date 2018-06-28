@@ -1,37 +1,44 @@
 package productions.darthplagueis.contentvault;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import java.util.List;
 
 import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.scrollingphotos.ScrollingContentNavigator;
-import productions.darthplagueis.contentvault.scrollingphotos.view.ScrollingPageAdapter;
+import productions.darthplagueis.contentvault.scrollingphotos.ScrollingPageAdapter;
 import productions.darthplagueis.contentvault.scrollingphotos.ScrollingPhotoViewModel;
+import productions.darthplagueis.contentvault.scrollingphotos.view.ScrollingItemFragment;
+import productions.darthplagueis.contentvault.util.ActivityUtil;
 
 public class ScrollGalleryActivity extends AppCompatActivity implements ScrollingContentNavigator {
 
-    private String string;
     private ViewPager scrollingViewPager;
+
+    private ScrollingPhotoViewModel photoViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scroll_gallery);
 
-        Intent extras = getIntent();
-        if (extras != null) string = extras.getStringExtra("testing");
+        Toolbar toolbar = findViewById(R.id.scroll_gallery_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         scrollingViewPager = findViewById(R.id.scrolling_viewPager);
 
-        ScrollingPhotoViewModel scrollingViewModel = obtainScrollingViewModel(this);
-        scrollingViewModel.getNewContentListEvent().observe(this, this::onContentScroll);
-        scrollingViewModel.getUserContentList();
+        photoViewModel = obtainScrollingViewModel(this);
+        photoViewModel.getNewContentListEvent().observe(this, this::onContentRetrieved);
+        photoViewModel.getNewItemAdapterPositionEvent().observe(this, this::onSetViewPagerItem);
+        photoViewModel.getUserContentList();
     }
 
     public static ScrollingPhotoViewModel obtainScrollingViewModel(FragmentActivity activity) {
@@ -44,10 +51,25 @@ public class ScrollGalleryActivity extends AppCompatActivity implements Scrollin
     }
 
     @Override
-    public void onContentScroll(List<UserContent> userContents) {
+    public void onContentRetrieved(List<UserContent> userContents) {
         ScrollingPageAdapter scrollingPageAdapter =
-                new ScrollingPageAdapter(getSupportFragmentManager(), userContents);
+                new ScrollingPageAdapter(getSupportFragmentManager(), photoViewModel, userContents);
         scrollingViewPager.setAdapter(scrollingPageAdapter);
-        if (string != null) scrollingPageAdapter.lookUpContentItem(string);
+        setupScrollingItemFragment(userContents);
+    }
+
+    @Override
+    public void onSetViewPagerItem(int position) {
+        scrollingViewPager.setCurrentItem(position, true);
+    }
+
+    private void setupScrollingItemFragment(List<UserContent> userContents) {
+        ScrollingItemFragment viewFragment =
+                (ScrollingItemFragment) getSupportFragmentManager().findFragmentByTag("SCROLLING_TAG");
+        if (viewFragment == null) {
+            viewFragment = ScrollingItemFragment.newInstance(userContents);
+            ActivityUtil.replaceFragmentInActivity(
+                    getSupportFragmentManager(), viewFragment, R.id.contentFrame);
+        }
     }
 }

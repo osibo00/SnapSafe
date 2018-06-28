@@ -23,15 +23,16 @@ import java.util.List;
 import productions.darthplagueis.contentvault.R;
 import productions.darthplagueis.contentvault.SingleLiveEvent;
 import productions.darthplagueis.contentvault.data.UserContent;
+import productions.darthplagueis.contentvault.data.source.content.UserContentCallBack;
 import productions.darthplagueis.contentvault.data.source.content.UserContentRepository;
 import productions.darthplagueis.contentvault.util.CurrentDateUtil;
-import productions.darthplagueis.contentvault.util.FileManager;
-import productions.darthplagueis.contentvault.util.FileManagerCallBack;
+import productions.darthplagueis.contentvault.util.filemanager.FileManager;
+import productions.darthplagueis.contentvault.util.filemanager.FileManagerCallBack;
 
 import static productions.darthplagueis.contentvault.FragmentsActivity.PICK_IMAGE_CODE_TAG;
 
 public class UserContentViewModel extends AndroidViewModel implements FileManagerCallBack.SaveFileCallBack,
-        FileManagerCallBack.CopyFileCallBack {
+        FileManagerCallBack.CopyFileCallBack, UserContentCallBack.GetUserContentCountCallBack {
 
     public final ObservableBoolean isFabExtending = new ObservableBoolean();
 
@@ -50,7 +51,11 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
 
     private SingleLiveEvent<String> newPhotoDetailEvent = new SingleLiveEvent<>();
 
-    private SingleLiveEvent<Void> newRecyclerViewLayoutEvent = new SingleLiveEvent<>();
+    private SingleLiveEvent<Void> newCarouselEvent = new SingleLiveEvent<>();
+
+    private SingleLiveEvent<Void> newSortingEvent = new SingleLiveEvent<>();
+
+    private SingleLiveEvent<Void> newSettingsEvent = new SingleLiveEvent<>();
 
     private SingleLiveEvent<Void> newPhotoImportEvent = new SingleLiveEvent<>();
 
@@ -64,9 +69,7 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
 
     private SingleLiveEvent<Void> newCopyPromptEvent = new SingleLiveEvent<>();
 
-    private SingleLiveEvent<Void> newSortingEvent = new SingleLiveEvent<>();
-
-    private FileManager fileManager = new FileManager(getApplication());
+    private final FileManager fileManager = FileManager.newInstance(getApplication().getApplicationContext());
 
     private final UserContentRepository contentRepository;
 
@@ -89,8 +92,19 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
         }
     }
 
-    public LiveData<List<UserContent>> getAllMedia() {
-        return contentRepository.getAllMedia();
+    @Override
+    public void onFileSaved(File file) {
+        createContentEntity(file);
+    }
+
+    @Override
+    public void onFileCopied(File file) {
+        createContentEntity(file);
+    }
+
+    @Override
+    public void onContentCountRetrieved(int count) {
+        if (count > 0) newCarouselEvent.call();
     }
 
     public LiveData<List<UserContent>> getDescDateList() {
@@ -109,10 +123,6 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
         return contentRepository.getAlbumOrderZAList();
     }
 
-    public int getItemCount() {
-        return contentRepository.getItemCount();
-    }
-
     public void insert(UserContent userContent) {
         contentRepository.insert(userContent);
     }
@@ -129,8 +139,12 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
         return newPhotoDetailEvent;
     }
 
-    public SingleLiveEvent<Void> getNewRecyclerViewLayoutEvent() {
-        return newRecyclerViewLayoutEvent;
+    public SingleLiveEvent<Void> getNewCarouselEvent() {
+        return newCarouselEvent;
+    }
+
+    public SingleLiveEvent<Void> getNewSettingsEvent() {
+        return newSettingsEvent;
     }
 
     public SingleLiveEvent<Void> getNewPhotoImportEvent() {
@@ -189,12 +203,16 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
         newPhotoDetailEvent.setValue(userContent.getFilePath());
     }
 
+    public void useCarouselView() {
+        contentRepository.getUserContentCount(this);
+    }
+
     public void createSortPopup() {
         newSortingEvent.call();
     }
 
-    public void createFilterPopup() {
-        newRecyclerViewLayoutEvent.call();
+    public void createSettingsPopup() {
+        newSettingsEvent.call();
     }
 
     public void extendFab() {
@@ -279,16 +297,6 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
         }
     }
 
-    @Override
-    public void onFileSaved(File file) {
-        createContentEntity(file);
-    }
-
-    @Override
-    public void onFileCopied(File file) {
-        createContentEntity(file);
-    }
-
     private void convertToBitmap(Uri uri) {
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(
@@ -303,8 +311,6 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
         insert(new UserContent(file.getName(), CurrentDateUtil.getDateString(),
                 CurrentDateUtil.getTimeStamp(), file.getAbsolutePath(),
                 file.getParentFile().getName().substring(4)));
-        Log.d("UCVM", "createContentEntity: " + file.getName() + " " + file.getAbsolutePath()
-                + " " + file.getParentFile().getName().substring(4));
     }
 
     private static void setAnimation(View view, boolean isExtending) {

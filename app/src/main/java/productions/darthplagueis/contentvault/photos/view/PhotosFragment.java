@@ -11,6 +11,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,7 +22,8 @@ import productions.darthplagueis.contentvault.FragmentsActivity;
 import productions.darthplagueis.contentvault.R;
 import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.databinding.PhotosFragmentBinding;
-import productions.darthplagueis.contentvault.photos.LayoutManagerType;
+import productions.darthplagueis.contentvault.photos.UserContentAdapter;
+import productions.darthplagueis.contentvault.util.recyclerview.LayoutManagerType;
 import productions.darthplagueis.contentvault.photos.UserContentViewModel;
 import productions.darthplagueis.contentvault.photos.view.dialogs.CopyDialog;
 import productions.darthplagueis.contentvault.photoalbums.view.dialogs.CreateAlbumDialog;
@@ -37,9 +39,14 @@ public class PhotosFragment extends Fragment {
     public static final String NEW_ALBUM_TAG = "NEW_ALBUM_TAG";
     public static final String COPY_DIALOG_TAG = "COPY_DIALOG_TAG";
 
+    public static PhotosFragment newInstance() {
+        return new PhotosFragment();
+    }
+
     private UserContentAdapter contentAdapter;
 
     private GridSpacingItemDecoration itemDecoration = null;
+    private LayoutManagerType layoutManagerType = LayoutManagerType.GRID_SPAN_FOUR;
 
     private UserContentViewModel contentViewModel;
 
@@ -49,10 +56,6 @@ public class PhotosFragment extends Fragment {
 
     public PhotosFragment() {
         // Required empty public constructor
-    }
-
-    public static PhotosFragment newInstance() {
-        return new PhotosFragment();
     }
 
     @Override
@@ -96,7 +99,7 @@ public class PhotosFragment extends Fragment {
 
         contentViewModel.getNewSortingEvent().observe(this, aVoid -> createSortingPopup());
 
-        contentViewModel.getNewRecyclerViewLayoutEvent().observe(this, aVoid ->
+        contentViewModel.getNewSettingsEvent().observe(this, aVoid ->
                 createFilteringPopup());
 
         photosFragmentBinding.galleryRecyclerView.setAdapter(contentAdapter);
@@ -149,27 +152,52 @@ public class PhotosFragment extends Fragment {
 
     private void createFilteringPopup() {
         PopupMenu popupMenu = new PopupMenu(
-                context, photosFragmentBinding.photoActionBar.filterBtn, Gravity.END);
-        popupMenu.getMenuInflater().inflate(R.menu.filter_menu, popupMenu.getMenu());
+                context, photosFragmentBinding.photoActionBar.settingsBtn, Gravity.END);
+        popupMenu.getMenuInflater().inflate(R.menu.photos_more_vert_menu, popupMenu.getMenu());
+        MenuItem menuItem = getCheckedItem(popupMenu, layoutManagerType);
+        menuItem.setChecked(true);
         popupMenu.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.grid_span_two:
                     setRecyclerViewLayoutManager(LayoutManagerType.GRID_SPAN_TWO);
+                    layoutManagerType = LayoutManagerType.GRID_SPAN_TWO;
                     return true;
                 case R.id.grid_span_three:
                     setRecyclerViewLayoutManager(LayoutManagerType.GRID_SPAN_THREE);
+                    layoutManagerType = LayoutManagerType.GRID_SPAN_THREE;
                     return true;
                 case R.id.grid_span_four:
                     setRecyclerViewLayoutManager(LayoutManagerType.GRID_SPAN_FOUR);
+                    layoutManagerType = LayoutManagerType.GRID_SPAN_FOUR;
                     return true;
                 case R.id.grid_span_five:
                     setRecyclerViewLayoutManager(LayoutManagerType.GRID_SPAN_FIVE);
+                    layoutManagerType = LayoutManagerType.GRID_SPAN_FIVE;
+                    return true;
+                case R.id.app_settings:
+                    return true;
+                case R.id.app_about:
                     return true;
                 default:
                     return false;
             }
         });
         popupMenu.show();
+    }
+
+    private MenuItem getCheckedItem(PopupMenu popupMenu, LayoutManagerType layoutManagerType) {
+        switch (layoutManagerType) {
+            case GRID_SPAN_TWO:
+                return popupMenu.getMenu().findItem(R.id.grid_span_two);
+            case GRID_SPAN_THREE:
+                return popupMenu.getMenu().findItem(R.id.grid_span_three);
+            case GRID_SPAN_FOUR:
+                return popupMenu.getMenu().findItem(R.id.grid_span_four);
+            case GRID_SPAN_FIVE:
+                return popupMenu.getMenu().findItem(R.id.grid_span_five);
+            default:
+                return popupMenu.getMenu().findItem(R.id.grid_span_four);
+        }
     }
 
     private void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
