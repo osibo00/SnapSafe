@@ -8,15 +8,20 @@ import android.support.annotation.NonNull;
 import java.io.File;
 import java.util.List;
 
+import productions.darthplagueis.contentvault.SingleLiveEvent;
 import productions.darthplagueis.contentvault.data.ContentAlbum;
 import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.data.source.album.ContentAlbumRepository;
+import productions.darthplagueis.contentvault.data.source.album.ContentFolderCallBack;
 import productions.darthplagueis.contentvault.data.source.content.UserContentRepository;
 import productions.darthplagueis.contentvault.util.CurrentDateUtil;
 import productions.darthplagueis.contentvault.util.filemanager.FileManager;
 import productions.darthplagueis.contentvault.util.filemanager.FileManagerCallBack;
 
-public class ContentAlbumViewModel extends AndroidViewModel implements FileManagerCallBack.MoveFileCallBack {
+public class ContentAlbumViewModel extends AndroidViewModel implements FileManagerCallBack.MoveFileCallBack,
+        ContentFolderCallBack.GetContentFolderNamesCallBack {
+
+    private SingleLiveEvent<List<String>> newFolderNamesEvent = new SingleLiveEvent<>();
 
     private FileManager fileManager = FileManager.newInstance(getApplication().getApplicationContext());
 
@@ -37,8 +42,8 @@ public class ContentAlbumViewModel extends AndroidViewModel implements FileManag
         return albumRepository.getDescDateList();
     }
 
-    public List<String> getAlbumNames() {
-        return albumRepository.getAlbumNames();
+    public SingleLiveEvent<List<String>> getNewFolderNamesEvent() {
+        return newFolderNamesEvent;
     }
 
     public void insertContentAlbum(ContentAlbum contentAlbum) {
@@ -59,6 +64,10 @@ public class ContentAlbumViewModel extends AndroidViewModel implements FileManag
 
     public void deleteUserContent(UserContent userContent) {
         contentRepository.delete(userContent);
+    }
+
+    public void getFolderNames() {
+        albumRepository.getFolderNames(this);
     }
 
     public void createNewAlbum(String albumName, String tag, List<UserContent> itemsSelectedList) {
@@ -90,6 +99,11 @@ public class ContentAlbumViewModel extends AndroidViewModel implements FileManag
     @Override
     public void onFileMoved(File file, UserContent userContent) {
         updateUserContentFields(userContent, file);
+    }
+
+    @Override
+    public void onFolderNamesRetrieved(List<String> folderNames) {
+        newFolderNamesEvent.setValue(folderNames);
     }
 
     private void updateUserContentFields(UserContent userContent, File file) {

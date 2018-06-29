@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 
 import productions.darthplagueis.contentvault.R;
 import productions.darthplagueis.contentvault.ViewModelFactory;
-import productions.darthplagueis.contentvault.data.ContentAlbum;
 import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.databinding.NewAlbumDialogBinding;
 import productions.darthplagueis.contentvault.photoalbums.ContentAlbumViewModel;
@@ -30,8 +29,8 @@ import productions.darthplagueis.contentvault.util.filemanager.FileManager;
 
 public class CreateAlbumDialog extends DialogFragment {
 
-    private List<UserContent> userContentList;
-    private List<String> userAlbumList = new ArrayList<>();
+    private List<UserContent> selectedContentList;
+    private List<String> folderNamesList = new ArrayList<>();
 
     private String albumName;
     private String albumTag;
@@ -42,7 +41,7 @@ public class CreateAlbumDialog extends DialogFragment {
 
     public static CreateAlbumDialog newInstance(List<UserContent> userContents) {
         CreateAlbumDialog dialog = new CreateAlbumDialog();
-        dialog.userContentList = userContents;
+        dialog.selectedContentList = userContents;
         return dialog;
     }
 
@@ -50,17 +49,15 @@ public class CreateAlbumDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setViews();
-
         if (getActivity() != null) {
             ViewModelFactory factory = ViewModelFactory.getINSTANCE(getActivity().getApplication());
             albumViewModel = ViewModelProviders.of(getActivity(), factory).get(ContentAlbumViewModel.class);
-            albumViewModel.getAllAlbums().observe(this, contentAlbums -> {
-                if (contentAlbums != null) {
-                    for (ContentAlbum album : contentAlbums) {
-                        userAlbumList.add(album.getAlbumName());
-                    }
+            albumViewModel.getNewFolderNamesEvent().observe(this, folderNames -> {
+                if (folderNames != null) {
+                    folderNamesList.addAll(folderNames);
                 }
             });
+            albumViewModel.getFolderNames();
         }
         Context context = Objects.requireNonNull(getContext(), "Context must not be null.");
         AlertDialog alertDialog = new AlertDialog.Builder(context)
@@ -90,13 +87,15 @@ public class CreateAlbumDialog extends DialogFragment {
     }
 
     private void onCreateClicked() {
-        if (isValidName(dialogBinding.dialogTextAlbum, albumName)) {
-            if (TextUtils.isEmpty(albumTag)) {
-                albumViewModel.createNewAlbum(albumName, null, userContentList);
-            } else {
-                albumViewModel.createNewAlbum(albumName, albumTag, userContentList);
+        if (albumViewModel != null) {
+            if (isValidName(dialogBinding.dialogTextAlbum, albumName)) {
+                if (TextUtils.isEmpty(albumTag)) {
+                    albumViewModel.createNewAlbum(albumName, null, selectedContentList);
+                } else {
+                    albumViewModel.createNewAlbum(albumName, albumTag, selectedContentList);
+                }
+                dismiss();
             }
-            dismiss();
         }
     }
 
@@ -106,7 +105,7 @@ public class CreateAlbumDialog extends DialogFragment {
             layout.setErrorEnabled(true);
             layout.setError(getString(R.string.album_dialog_empty));
             return false;
-        } else if (userAlbumList.contains(name) || name.equalsIgnoreCase(FileManager.DEFAULT_DIRECTORY_TAG)) {
+        } else if (folderNamesList.contains(name) || name.equalsIgnoreCase(FileManager.DEFAULT_DIRECTORY_TAG)) {
             layout.setErrorEnabled(true);
             layout.setError(String.format(getString(R.string.create_dialog_exists_error), name));
             return false;
