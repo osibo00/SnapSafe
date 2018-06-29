@@ -10,7 +10,7 @@ import productions.darthplagueis.contentvault.data.ContentAlbum;
 import productions.darthplagueis.contentvault.util.AppExecutors;
 import productions.darthplagueis.contentvault.util.DiskIOThreadExecutor;
 
-public class ContentAlbumRepository {
+public class ContentAlbumRepository implements ContentFolderCallBack {
 
     private AppExecutors appExecutors;
 
@@ -30,16 +30,14 @@ public class ContentAlbumRepository {
         return contentAlbumDao.getDescendingDateOrder();
     }
 
-    public List<String> getAlbumNames() {
-        return contentAlbumDao.getAlbumNames();
+    public void insert(ContentAlbum contentAlbum) {
+        Runnable runnable = () -> contentAlbumDao.insert(contentAlbum);
+        appExecutors.getDatabaseThread().execute(runnable);
     }
 
-    public void insert(ContentAlbum contentAlbums) {
-        new insertAsyncTask(contentAlbumDao).execute(contentAlbums);
-    }
-
-    public void delete(ContentAlbum contentAlbums) {
-        new deleteAsyncTask(contentAlbumDao).execute(contentAlbums);
+    public void delete(ContentAlbum contentAlbum) {
+        Runnable runnable = () -> contentAlbumDao.delete(contentAlbum);
+        appExecutors.getDatabaseThread().execute(runnable);
     }
 
     public void deleteAll() {
@@ -47,33 +45,11 @@ public class ContentAlbumRepository {
         appExecutors.getDatabaseThread().execute(runnable);
     }
 
-    private static class insertAsyncTask extends AsyncTask<ContentAlbum, Void, Void> {
-
-        private ContentAlbumDao asyncTaskDao;
-
-        insertAsyncTask(ContentAlbumDao dao) {
-            asyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(ContentAlbum... contentAlbums) {
-            asyncTaskDao.insert(contentAlbums[0]);
-            return null;
-        }
-    }
-
-    private static class deleteAsyncTask extends AsyncTask<ContentAlbum, Void, Void> {
-
-        private ContentAlbumDao asyncTaskDao;
-
-        deleteAsyncTask(ContentAlbumDao dao) {
-            asyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(ContentAlbum... contentAlbums) {
-            asyncTaskDao.delete(contentAlbums[0]);
-            return null;
-        }
+    public void getFolderNames(GetContentFolderNamesCallBack callBack) {
+        Runnable runnable = () -> {
+            List<String> folderNames = contentAlbumDao.getAlbumNames();
+            appExecutors.getMainThread().execute(() -> callBack.onFolderNamesRetrieved(folderNames));
+        };
+        appExecutors.getDatabaseThread().execute(runnable);
     }
 }

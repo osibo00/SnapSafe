@@ -18,16 +18,22 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 public interface UserContentDao {
 
     @Insert(onConflict = REPLACE)
-    void insert(UserContent... userContent);
+    void insert(UserContent... userContents);
+
+    @Update(onConflict = REPLACE)
+    void update(UserContent... userContents);
+
+    @Delete
+    void delete(UserContent... userContents);
 
     @Query("DELETE from user_content")
     void deleteAll();
 
+    @Query("SELECT COUNT(*) from user_content")
+    int countUserContentTotal();
+
     @Query("SELECT * from user_content")
     LiveData<List<UserContent>> getAllUserContent();
-
-    @Query("SELECT COUNT(*) from user_content")
-    int countUserItemTotal();
 
     @Query("SELECT * from user_content ORDER BY time_stamp DESC")
     LiveData<List<UserContent>> getDescendingDateOrder();
@@ -56,11 +62,5 @@ public interface UserContentDao {
 
     @Query("SELECT * from user_content ORDER BY time_stamp DESC")
     List<UserContent> getUserContentList();
-
-    @Update(onConflict = REPLACE)
-    void updateUserContent(UserContent... userContents);
-
-    @Delete
-    void delete(UserContent userContent);
 }
 

@@ -26,7 +26,7 @@ public class ScrollingItemAdapter extends RecyclerView.Adapter<ScrollingItemAdap
 
     private final ScrollingPhotoViewModel photoViewModel;
 
-    ScrollingItemAdapter(ScrollingPhotoViewModel photoViewModel) {
+    public ScrollingItemAdapter(ScrollingPhotoViewModel photoViewModel) {
         this.photoViewModel = photoViewModel;
     }
 
