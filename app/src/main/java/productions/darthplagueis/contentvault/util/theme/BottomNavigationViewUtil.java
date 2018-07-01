@@ -1,4 +1,4 @@
-package productions.darthplagueis.contentvault.util;
+package productions.darthplagueis.contentvault.util.theme;
 
 import android.annotation.SuppressLint;
 import android.support.design.internal.BottomNavigationItemView;

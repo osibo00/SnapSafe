@@ -3,6 +3,7 @@ package productions.darthplagueis.contentvault.photoalbums.view.dialogs;
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -21,26 +22,29 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 import productions.darthplagueis.contentvault.R;
+import productions.darthplagueis.contentvault.SnapSafeApplication;
 import productions.darthplagueis.contentvault.ViewModelFactory;
 import productions.darthplagueis.contentvault.data.UserContent;
-import productions.darthplagueis.contentvault.databinding.NewAlbumDialogBinding;
-import productions.darthplagueis.contentvault.photoalbums.ContentAlbumViewModel;
+import productions.darthplagueis.contentvault.databinding.CreateFolderDialogBinding;
+import productions.darthplagueis.contentvault.photoalbums.ContentFolderViewModel;
 import productions.darthplagueis.contentvault.util.filemanager.FileManager;
+import productions.darthplagueis.contentvault.util.theme.ResourcesUtil;
+import productions.darthplagueis.contentvault.util.theme.ThemeType;
 
-public class CreateAlbumDialog extends DialogFragment {
+public class CreateFolderDialog extends DialogFragment {
 
     private List<UserContent> selectedContentList;
     private List<String> folderNamesList = new ArrayList<>();
 
-    private String albumName;
+    private String folderName;
     private String albumTag;
 
-    private ContentAlbumViewModel albumViewModel;
+    private ContentFolderViewModel folderViewModel;
 
-    private NewAlbumDialogBinding dialogBinding;
+    private CreateFolderDialogBinding dialogBinding;
 
-    public static CreateAlbumDialog newInstance(List<UserContent> userContents) {
-        CreateAlbumDialog dialog = new CreateAlbumDialog();
+    public static CreateFolderDialog newInstance(List<UserContent> userContents) {
+        CreateFolderDialog dialog = new CreateFolderDialog();
         dialog.selectedContentList = userContents;
         return dialog;
     }
@@ -51,20 +55,24 @@ public class CreateAlbumDialog extends DialogFragment {
         setViews();
         if (getActivity() != null) {
             ViewModelFactory factory = ViewModelFactory.getINSTANCE(getActivity().getApplication());
-            albumViewModel = ViewModelProviders.of(getActivity(), factory).get(ContentAlbumViewModel.class);
-            albumViewModel.getNewFolderNamesEvent().observe(this, folderNames -> {
-                if (folderNames != null) {
-                    folderNamesList.addAll(folderNames);
-                }
+            folderViewModel = ViewModelProviders.of(getActivity(), factory).get(ContentFolderViewModel.class);
+            folderViewModel.getNewFolderNamesEvent().observe(this, folderNames -> {
+                if (folderNames != null) folderNamesList.addAll(folderNames);
             });
-            albumViewModel.getFolderNames();
+            folderViewModel.getFolderNames();
         }
         Context context = Objects.requireNonNull(getContext(), "Context must not be null.");
+        Drawable drawable;
+        if (SnapSafeApplication.appTheme == ThemeType.APP_THEME_LIGHT) {
+            drawable = ResourcesUtil.getColorIcon(context, R.drawable.ic_create_new_folder_black_24dp, R.color.colorPrimary);
+        } else {
+            drawable = ResourcesUtil.getColorIcon(context, R.drawable.ic_create_new_folder_black_24dp, R.color.colorDarkSecondary);
+        }
         AlertDialog alertDialog = new AlertDialog.Builder(context)
                 .setView(dialogBinding.getRoot())
-                .setTitle(R.string.album_dialog_title)
+                .setTitle(ResourcesUtil.getDialogTitle(context, R.string.album_dialog_title))
                 .setMessage(R.string.album_dialog_message)
-                .setIcon(R.drawable.ic_create_new_folder_green_24dp)
+                .setIcon(drawable)
                 .setPositiveButton(R.string.positive_btn_create, null)
                 .setNegativeButton(R.string.dialog_cancel, null)
                 .create();
@@ -74,7 +82,7 @@ public class CreateAlbumDialog extends DialogFragment {
     }
 
     private void setViews() {
-        dialogBinding = NewAlbumDialogBinding.inflate(
+        dialogBinding = CreateFolderDialogBinding.inflate(
                 LayoutInflater.from(getContext()), null, false);
         addTextWatcher();
     }
@@ -87,12 +95,12 @@ public class CreateAlbumDialog extends DialogFragment {
     }
 
     private void onCreateClicked() {
-        if (albumViewModel != null) {
-            if (isValidName(dialogBinding.dialogTextAlbum, albumName)) {
+        if (folderViewModel != null) {
+            if (isValidName(dialogBinding.dialogTextAlbum, folderName)) {
                 if (TextUtils.isEmpty(albumTag)) {
-                    albumViewModel.createNewAlbum(albumName, null, selectedContentList);
+                    folderViewModel.createNewFolder(folderName, null, selectedContentList);
                 } else {
-                    albumViewModel.createNewAlbum(albumName, albumTag, selectedContentList);
+                    folderViewModel.createNewFolder(folderName, albumTag, selectedContentList);
                 }
                 dismiss();
             }
@@ -135,7 +143,7 @@ public class CreateAlbumDialog extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                albumName = s.toString().trim();
+                folderName = s.toString().trim();
                 dialogBinding.dialogTextTag.setVisibility(View.VISIBLE);
             }
         });

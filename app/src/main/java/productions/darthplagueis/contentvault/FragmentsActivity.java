@@ -8,14 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import productions.darthplagueis.contentvault.photoalbums.view.AlbumsFragment;
-import productions.darthplagueis.contentvault.photoalbums.ContentAlbumViewModel;
+import productions.darthplagueis.contentvault.photoalbums.ContentFolderViewModel;
+import productions.darthplagueis.contentvault.photoalbums.view.FoldersFragment;
 import productions.darthplagueis.contentvault.photodetail.DetailPhotoViewModel;
 import productions.darthplagueis.contentvault.photodetail.DetailPhotoFragment;
 import productions.darthplagueis.contentvault.photos.view.PhotosFragment;
 import productions.darthplagueis.contentvault.photos.UserContentViewModel;
-import productions.darthplagueis.contentvault.util.ActivityUtil;
-import productions.darthplagueis.contentvault.util.BottomNavigationViewUtil;
+import productions.darthplagueis.contentvault.util.app.ActivityUtil;
+import productions.darthplagueis.contentvault.util.theme.BottomNavigationViewUtil;
+import productions.darthplagueis.contentvault.util.theme.ThemeUtil;
 
 public class FragmentsActivity extends AppCompatActivity implements ActivityNavigator {
 
@@ -23,7 +24,7 @@ public class FragmentsActivity extends AppCompatActivity implements ActivityNavi
     public static final int PICK_IMAGE_CODE_TAG = 1987;
 
     private PhotosFragment photosFragment;
-    private AlbumsFragment albumsFragment;
+    private FoldersFragment foldersFragment;
 
     private BottomNavigationView navigation;
 
@@ -34,6 +35,7 @@ public class FragmentsActivity extends AppCompatActivity implements ActivityNavi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_fragments);
 
         navigation = findViewById(R.id.bottom_navigation);
@@ -42,8 +44,8 @@ public class FragmentsActivity extends AppCompatActivity implements ActivityNavi
 
         photosFragment =
                 (PhotosFragment) getSupportFragmentManager().findFragmentByTag("PHOTOS_TAG");
-        albumsFragment =
-                (AlbumsFragment) getSupportFragmentManager().findFragmentByTag("ALBUMS_TAG");
+        foldersFragment =
+                (FoldersFragment) getSupportFragmentManager().findFragmentByTag("ALBUMS_TAG");
 
         setupPhotosFragment();
 
@@ -102,9 +104,9 @@ public class FragmentsActivity extends AppCompatActivity implements ActivityNavi
                 .get(DetailPhotoViewModel.class);
     }
 
-    public static ContentAlbumViewModel obtainAlbumViewModel(FragmentActivity activity) {
+    public static ContentFolderViewModel obtainAlbumViewModel(FragmentActivity activity) {
         return ViewModelProviders.of(activity, getViewModelFactory(activity))
-                .get(ContentAlbumViewModel.class);
+                .get(ContentFolderViewModel.class);
     }
 
     private static ViewModelFactory getViewModelFactory(FragmentActivity activity) {
@@ -130,11 +132,11 @@ public class FragmentsActivity extends AppCompatActivity implements ActivityNavi
     }
 
     private void setupAlbumsFragment() {
-        if (albumsFragment == null) {
-            albumsFragment = AlbumsFragment.newInstance();
+        if (foldersFragment == null) {
+            foldersFragment = FoldersFragment.newInstance();
         }
         ActivityUtil.replaceFragmentInActivity(
-                getSupportFragmentManager(), albumsFragment, R.id.contentFrame);
+                getSupportFragmentManager(), foldersFragment, R.id.contentFrame);
     }
 
     private void setNavigationListener() {

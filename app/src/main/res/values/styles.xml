@@ -1,26 +1,48 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
-    <style name="AppTheme" parent="AppTheme.NoToolbar" />
+    <style name="AppTheme" parent="AppTheme.Light" />
 
     <!-- Base application theme. -->
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <style name="AppTheme.NoToolbar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/md_mini_fab_color01</item>
-        <item name="colorPrimaryDark">@color/md_mini_fab_color01</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:colorBackground">@color/colorSurface</item>
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowEnterTransition">@android:transition/slide_right</item>
         <item name="android:windowExitTransition">@android:transition/slide_left</item>
         <item name="coordinatorLayoutStyle">@style/Widget.Design.CoordinatorLayout</item>
         <item name="popupMenuStyle">@style/PopupMenuStyle</item>
-        <item name="textAppearanceSmallPopupMenu">@style/PopupTextSmall</item>
-        <item name="textAppearanceLargePopupMenu">@style/PopupTextLarge</item>
+    </style>
+
+    <style name="AppTheme.Light" parent="AppTheme.Base">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:colorBackground">@color/colorSurfaceDark</item>
+        <item name="colorSecondary">@color/colorPrimary</item>
+        <item name="appBarPrimaryColor">@android:color/white</item>
+        <item name="appBarSecondaryColor">@color/colorPrimary</item>
+        <item name="fabColor">@color/colorPrimary</item>
+        <item name="fabExtendedBackground">@color/light25alpha</item>
+        <item name="iconColor">@color/md_inactive_icon</item>
+        <item name="actionIconColor">@color/md_blacktext_high_emphasis</item>
+        <item name="textAppearanceSmallPopupMenu">@style/PopupTextSmallLight</item>
+        <item name="textAppearanceLargePopupMenu">@style/PopupTextLargeLight</item>
+        <item name="alertDialogTheme">@style/AlertDialogLight</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="AppTheme.Base">
+        <item name="colorPrimary">@color/colorDarkPrimary</item>
+        <item name="colorPrimaryDark">@color/colorDarkPrimaryDark</item>
+        <item name="colorAccent">@color/colorDarkSecondary</item>
+        <item name="android:colorBackground">@color/colorDarkPrimary</item>
+        <item name="colorSecondary">@color/colorDarkSecondary</item>
+        <item name="appBarPrimaryColor">@color/colorDarkPrimaryAccent</item>
+        <item name="appBarSecondaryColor">@color/colorDarkSecondary</item>
+        <item name="fabColor">@color/colorDarkSecondary</item>
+        <item name="fabExtendedBackground">@color/dark25alpha</item>
+        <item name="iconColor">@color/md_whitetext_high_emphasis</item>
+        <item name="actionIconColor">@color/md_whitetext_high_emphasis</item>
+        <item name="textAppearanceSmallPopupMenu">@style/PopupTextSmallDark</item>
+        <item name="textAppearanceLargePopupMenu">@style/PopupTextLargeDark</item>
+        <item name="alertDialogTheme">@style/AlertDialogDark</item>
     </style>
 
     <style name="PopupMenuStyle" parent="@style/Widget.AppCompat.PopupMenu.Overflow">
@@ -28,36 +50,60 @@
         <item name="android:dropDownVerticalOffset">@dimen/drop_down_offset</item>
     </style>
 
-    <style name="PopupTextLarge" parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Large">
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/md_blacktext_medium_emphasis</item>
-        <item name="android:textSize">@dimen/text_view_16sp</item>
-    </style>
-
-    <style name="PopupTextSmall" parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
+    <style name="PopupTextSmallLight" parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/md_blacktext_medium_emphasis</item>
         <item name="android:textSize">@dimen/text_view_14sp</item>
     </style>
 
-    <style name="action_toolbar_button" parent="Widget.AppCompat.ImageButton">
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:foreground">?android:attr/selectableItemBackgroundBorderless</item>
+    <style name="PopupTextSmallDark" parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/md_whitetext_high_emphasis</item>
+        <item name="android:textSize">@dimen/text_view_14sp</item>
     </style>
 
-    <style name="FontHeading20sp" parent="@android:style/TextAppearance">
+    <style name="PopupTextLargeLight" parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Large">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/md_blacktext_medium_emphasis</item>
+        <item name="android:textSize">@dimen/text_view_16sp</item>
+    </style>
+
+    <style name="PopupTextLargeDark" parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Large">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/md_whitetext_high_emphasis</item>
+        <item name="android:textSize">@dimen/text_view_16sp</item>
+    </style>
+
+    <style name="AlertDialogLight" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/colorSurfaceDark</item>
+        <item name="android:textColorPrimary">@color/md_blacktext_high_emphasis</item>
+        <item name="android:colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="AlertDialogDark" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:background">@color/colorDarkPrimary</item>
+        <item name="android:textColorPrimary">@color/md_whitetext_high_emphasis</item>
+        <item name="android:colorAccent">@color/colorDarkSecondary</item>
+    </style>
+
+    <style name="action_toolbar_button" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="FontHeading20spBlack" parent="@android:style/TextAppearance">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/md_blacktext_high_emphasis</item>
         <item name="android:textSize">@dimen/text_view_20sp</item>
     </style>
 
-    <style name="FontHeading20spGreen" parent="@android:style/TextAppearance">
+    <style name="FontHeading20sp" parent="@android:style/TextAppearance">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/md_mini_fab_color01</item>
         <item name="android:textSize">@dimen/text_view_20sp</item>
     </style>
 

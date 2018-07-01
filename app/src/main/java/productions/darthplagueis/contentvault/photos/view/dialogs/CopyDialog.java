@@ -2,6 +2,7 @@ package productions.darthplagueis.contentvault.photos.view.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -12,7 +13,10 @@ import android.widget.Button;
 import java.util.Objects;
 
 import productions.darthplagueis.contentvault.R;
+import productions.darthplagueis.contentvault.SnapSafeApplication;
 import productions.darthplagueis.contentvault.photos.UserContentViewModel;
+import productions.darthplagueis.contentvault.util.theme.ResourcesUtil;
+import productions.darthplagueis.contentvault.util.theme.ThemeType;
 
 public class CopyDialog extends DialogFragment {
 
@@ -28,10 +32,16 @@ public class CopyDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Context context = Objects.requireNonNull(getContext(), "Context must not be null.");
+        Drawable drawable;
+        if (SnapSafeApplication.appTheme == ThemeType.APP_THEME_LIGHT) {
+            drawable = ResourcesUtil.getColorIcon(context, R.drawable.ic_content_copy_black_24dp, R.color.colorPrimary);
+        } else {
+            drawable = ResourcesUtil.getColorIcon(context, R.drawable.ic_content_copy_black_24dp, R.color.colorDarkSecondary);
+        }
         AlertDialog alertDialog = new AlertDialog.Builder(context)
-                .setTitle(R.string.copy)
+                .setTitle(ResourcesUtil.getDialogTitle(context, R.string.copy))
                 .setMessage(R.string.make_copies)
-                .setIcon(R.drawable.ic_content_copy_green_24dp)
+                .setIcon(drawable)
                 .setPositiveButton(R.string.dialog_yes, null)
                 .setNegativeButton(R.string.dialog_cancel, null)
                 .create();

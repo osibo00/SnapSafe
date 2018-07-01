@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="colorSecondary" format="color" />
+    <attr name="appBarPrimaryColor" format="color" />
+    <attr name="appBarSecondaryColor" format="color" />
+    <attr name="toolbarColor" format="color" />
+    <attr name="actionBarColor" format="color" />
+    <attr name="iconColor" format="color" />
+    <attr name="actionIconColor" format="color" />
+    <attr name="fabColor" format="color" />
+    <attr name="fabExtendedBackground" format="color" />
+
+</resources>

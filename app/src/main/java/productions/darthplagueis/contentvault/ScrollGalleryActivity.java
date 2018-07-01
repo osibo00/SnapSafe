@@ -14,17 +14,21 @@ import productions.darthplagueis.contentvault.scrollingphotos.ScrollingContentNa
 import productions.darthplagueis.contentvault.scrollingphotos.ScrollingPageAdapter;
 import productions.darthplagueis.contentvault.scrollingphotos.ScrollingPhotoViewModel;
 import productions.darthplagueis.contentvault.scrollingphotos.view.ScrollingItemFragment;
-import productions.darthplagueis.contentvault.util.ActivityUtil;
+import productions.darthplagueis.contentvault.util.app.ActivityUtil;
+import productions.darthplagueis.contentvault.util.theme.ThemeUtil;
 
 public class ScrollGalleryActivity extends AppCompatActivity implements ScrollingContentNavigator {
 
     private ViewPager scrollingViewPager;
+
+    private ScrollingItemFragment itemFragment;
 
     private ScrollingPhotoViewModel photoViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_scroll_gallery);
 
         Toolbar toolbar = findViewById(R.id.scroll_gallery_toolbar);
@@ -64,12 +68,12 @@ public class ScrollGalleryActivity extends AppCompatActivity implements Scrollin
     }
 
     private void setupScrollingItemFragment(List<UserContent> userContents) {
-        ScrollingItemFragment viewFragment =
+        itemFragment =
                 (ScrollingItemFragment) getSupportFragmentManager().findFragmentByTag("SCROLLING_TAG");
-        if (viewFragment == null) {
-            viewFragment = ScrollingItemFragment.newInstance(userContents);
-            ActivityUtil.replaceFragmentInActivity(
-                    getSupportFragmentManager(), viewFragment, R.id.contentFrame);
+        if (itemFragment == null) {
+            itemFragment = ScrollingItemFragment.newInstance(userContents);
+            ActivityUtil.slideFragmentInActivity(
+                    getSupportFragmentManager(), itemFragment, R.id.contentFrame);
         }
     }
 }

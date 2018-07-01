@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.io.File;
 
@@ -43,13 +44,9 @@ public class DetailPhotoFragment extends Fragment {
                              Bundle savedInstanceState) {
         detailFragmentBinding = PhotoDetailFragmentBinding.inflate(
                 inflater, container, false);
+        setImmersiveMode();
         detailViewModel = FragmentsActivity.obtainDetailViewModel(getActivity());
         detailFragmentBinding.setVariable(BR.detailViewModel, detailViewModel);
-
-        detailFragmentBinding.getRoot().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
         return detailFragmentBinding.getRoot();
     }
@@ -61,7 +58,19 @@ public class DetailPhotoFragment extends Fragment {
         if (photoFilePath != null) {
             Glide.with(detailFragmentBinding.getRoot())
                     .load(new File(photoFilePath))
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(detailFragmentBinding.detailImageView);
         }
+    }
+
+    private void setImmersiveMode() {
+        detailFragmentBinding.getRoot().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN
+        );
     }
 }

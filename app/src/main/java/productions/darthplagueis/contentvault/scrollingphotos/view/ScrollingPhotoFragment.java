@@ -10,8 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.io.File;
 
@@ -22,7 +21,7 @@ public class ScrollingPhotoFragment extends Fragment {
 
     public static final String ARGUMENT_SCROLLING_TAG = "ARGUMENT_SCROLLING_TAG";
 
-    private ScrollingPhotoFragmentBinding scrollingFragmentBinding;
+    private ScrollingPhotoFragmentBinding photoFragmentBinding;
 
     public static ScrollingPhotoFragment newInstance(String filePath) {
         Bundle arguments = new Bundle();
@@ -39,10 +38,10 @@ public class ScrollingPhotoFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        scrollingFragmentBinding =
+        photoFragmentBinding =
                 ScrollingPhotoFragmentBinding.inflate(inflater, container, false);
 
-        return scrollingFragmentBinding.getRoot();
+        return photoFragmentBinding.getRoot();
     }
 
     @Override
@@ -50,10 +49,10 @@ public class ScrollingPhotoFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         String photoFilePath = getArguments() != null ? getArguments().getString(ARGUMENT_SCROLLING_TAG) : null;
         if (photoFilePath != null) {
-            Glide.with(scrollingFragmentBinding.getRoot())
+            Glide.with(photoFragmentBinding.getRoot())
                     .load(new File(photoFilePath))
-                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
-                    .into(scrollingFragmentBinding.scrollingPhotoImageView);
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(photoFragmentBinding.scrollingPhotoImageView);
         }
     }
 }

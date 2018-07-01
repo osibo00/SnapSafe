@@ -1,4 +1,4 @@
-package productions.darthplagueis.contentvault.data.source.album;
+package productions.darthplagueis.contentvault.data.source.contentfolders;
 
 import java.util.List;
 

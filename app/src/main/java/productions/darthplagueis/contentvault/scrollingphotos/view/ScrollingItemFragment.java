@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -55,10 +56,8 @@ public class ScrollingItemFragment extends Fragment {
         if (userContentList != null) viewAdapter.setUserContentList(userContentList);
         RecyclerView recyclerView = viewFragmentBinding.scrollingRecyclerView;
         recyclerView.setAdapter(viewAdapter);
-        recyclerView.setLayoutManager(
-                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(1, 0, false));
-
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(3, 0, false));
         photoViewModel.getNewPagerAdapterPositionEvent().observe(this, recyclerView::smoothScrollToPosition);
     }
 }

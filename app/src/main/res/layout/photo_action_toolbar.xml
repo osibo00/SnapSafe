@@ -8,15 +8,19 @@
         <import type="android.view.View" />
 
         <variable
+            name="toolBarBackgroundColor"
+            type="int" />
+
+        <variable
             name="toolBarViewModel"
             type="productions.darthplagueis.contentvault.photos.UserContentViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/photo_action_bar_layout"
+        appPrimaryBackground="@{toolBarBackgroundColor}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@{toolBarViewModel.isActionState ? @color/colorAccent : @android:color/white}"
         tools:layout_height="?android:attr/actionBarSize">
 
         <!-- The action button row of the toolbar.
@@ -25,15 +29,17 @@
 
         <ImageButton
             android:id="@+id/close_btn"
-            style="@style/action_toolbar_button"
             android:layout_width="@dimen/md_icon_button_margin"
             android:layout_height="@dimen/md_icon_button_margin"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:onClick="@{() -> toolBarViewModel.disableMultiSelection()}"
+            android:src="@drawable/ic_close_black_24dp"
+            android:tint="?attr/actionIconColor"
+            android:tintMode="src_in"
             android:visibility="@{toolBarViewModel.isActionState ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_close_black_24dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/utilBar_text"
@@ -42,6 +48,7 @@
             android:gravity="start|center_vertical"
             android:text="@{toolBarViewModel.photoActionBarText}"
             android:textAppearance="@style/FontHeading20sp"
+            android:textColor="?attr/actionIconColor"
             android:visibility="@{toolBarViewModel.isActionState ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/delete_btn"
@@ -51,39 +58,45 @@
 
         <ImageButton
             android:id="@+id/delete_btn"
-            style="@style/action_toolbar_button"
             android:layout_width="@dimen/md_icon_button_margin"
             android:layout_height="@dimen/md_icon_button_margin"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:onClick="@{() -> toolBarViewModel.presentDeletePrompt()}"
+            android:src="@drawable/ic_delete_black_24dp"
+            android:tint="?attr/actionIconColor"
+            android:tintMode="src_in"
             android:visibility="@{toolBarViewModel.isActionState ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/copy_btn"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_delete_black_24dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/copy_btn"
-            style="@style/action_toolbar_button"
             android:layout_width="@dimen/md_icon_button_margin"
             android:layout_height="@dimen/md_icon_button_margin"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:onClick="@{() -> toolBarViewModel.presentCopyPrompt()}"
+            android:src="@drawable/ic_content_copy_black_24dp"
+            android:tint="?attr/actionIconColor"
+            android:tintMode="src_in"
             android:visibility="@{toolBarViewModel.isActionState ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/create_folder_btn"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_content_copy_black_24dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/create_folder_btn"
-            style="@style/action_toolbar_button"
             android:layout_width="@dimen/md_icon_button_margin"
             android:layout_height="@dimen/md_icon_button_margin"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:onClick="@{() -> toolBarViewModel.presentAlbumPrompt()}"
+            android:src="@drawable/ic_create_new_folder_black_24dp"
+            android:tint="?attr/actionIconColor"
+            android:tintMode="src_in"
             android:visibility="@{toolBarViewModel.isActionState ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_create_new_folder_black_24dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- The default button row of the toolbar. -->
 
@@ -104,7 +117,8 @@
             android:layout_height="match_parent"
             android:gravity="start|center_vertical"
             android:text="@string/app_name"
-            android:textAppearance="@style/FontHeading20spGreen"
+            android:textAppearance="@style/FontHeading20sp"
+            android:textColor="?attr/appBarSecondaryColor"
             android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/carousel_btn"
@@ -113,39 +127,45 @@
 
         <ImageButton
             android:id="@+id/carousel_btn"
-            style="@style/action_toolbar_button"
             android:layout_width="@dimen/md_icon_button_margin"
             android:layout_height="@dimen/md_icon_button_margin"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:onClick="@{() -> toolBarViewModel.useCarouselView()}"
+            android:src="@drawable/ic_view_carousel_black_24dp"
+            android:tint="?attr/iconColor"
+            android:tintMode="src_in"
             android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/sort_btn"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_view_carousel_black_24dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/sort_btn"
-            style="@style/action_toolbar_button"
             android:layout_width="@dimen/md_icon_button_margin"
             android:layout_height="@dimen/md_icon_button_margin"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:onClick="@{() -> toolBarViewModel.createSortPopup()}"
+            android:src="@drawable/ic_sort_black_24dp"
+            android:tint="?attr/iconColor"
+            android:tintMode="src_in"
             android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/settings_btn"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_sort_black_24dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.v7.widget.AppCompatImageButton
+        <ImageButton
             android:id="@+id/settings_btn"
-            style="@style/action_toolbar_button"
             android:layout_width="@dimen/md_icon_button_margin"
             android:layout_height="@dimen/md_icon_button_margin"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:onClick="@{() -> toolBarViewModel.createSettingsPopup()}"
+            android:src="@drawable/ic_more_vert_black_24dp"
+            android:tint="?attr/iconColor"
+            android:tintMode="src_in"
             android:visibility="@{toolBarViewModel.isActionState ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>
