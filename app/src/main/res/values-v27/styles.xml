@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="AppTheme.NoToolbar">
+    <style name="AppTheme" parent="AppTheme.Light.27" />
+
+    <style name="AppTheme.Light.27" parent="AppTheme.Light">
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@android:color/white</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="android:navigationBarColor">@android:color/white</item>
         <item name="android:navigationBarDividerColor">@color/md_inactive_icon</item>
+    </style>
+
+    <style name="AppTheme.Dark.27" parent="AppTheme.Dark">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">@color/colorDarkPrimaryDark</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:navigationBarColor">@color/colorDarkPrimaryDark</item>
+        <item name="android:navigationBarDividerColor">@color/colorDarkSecondary</item>
     </style>
 
 </resources>

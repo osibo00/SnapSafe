@@ -8,24 +8,25 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.util.List;
 
 import productions.darthplagueis.contentvault.R;
-import productions.darthplagueis.contentvault.data.ContentAlbum;
+import productions.darthplagueis.contentvault.data.ContentFolder;
 import productions.darthplagueis.contentvault.databinding.ContentAlbumItemBinding;
 
-public class ContentAlbumAdapter extends RecyclerView.Adapter<ContentAlbumAdapter.AlbumViewHolder> {
+public class ContentFolderAdapter extends RecyclerView.Adapter<ContentFolderAdapter.AlbumViewHolder> {
 
-    private List<ContentAlbum> contentAlbumList;
+    private List<ContentFolder> contentFolderList;
 
-    private ContentAlbumViewModel albumViewModel;
+    private ContentFolderViewModel albumViewModel;
 
     private LayoutInflater layoutInflater;
 
-    public ContentAlbumAdapter(ContentAlbumViewModel viewModel) {
+    public ContentFolderAdapter(ContentFolderViewModel viewModel) {
         this.albumViewModel = viewModel;
     }
 
@@ -40,16 +41,16 @@ public class ContentAlbumAdapter extends RecyclerView.Adapter<ContentAlbumAdapte
 
     @Override
     public void onBindViewHolder(@NonNull AlbumViewHolder holder, int position) {
-        holder.onBind(contentAlbumList.get(position));
+        holder.onBind(contentFolderList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return contentAlbumList != null ? contentAlbumList.size() : 0;
+        return contentFolderList != null ? contentFolderList.size() : 0;
     }
 
-    public void setContentAlbumList(List<ContentAlbum> contentAlbums) {
-        contentAlbumList = contentAlbums;
+    public void setContentFolderList(List<ContentFolder> contentFolders) {
+        contentFolderList = contentFolders;
         notifyDataSetChanged();
     }
 
@@ -62,14 +63,14 @@ public class ContentAlbumAdapter extends RecyclerView.Adapter<ContentAlbumAdapte
             this.itemBinding = itemBinding;
         }
 
-        void onBind(ContentAlbum item) {
+        void onBind(ContentFolder item) {
             Glide.with(itemBinding.getRoot())
                     .load(new File(item.getDirectoryIcon()))
-                    .thumbnail(0.5f)
-                    .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL))
+                    .thumbnail(0.25f)
+                    .transition(DrawableTransitionOptions.withCrossFade())
                     .into(itemBinding.albumImageView);
 
-            itemBinding.albumText.setText(item.getAlbumName());
+            itemBinding.albumText.setText(item.getFolderName());
         }
     }
 }

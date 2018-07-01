@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 
 import productions.darthplagueis.contentvault.data.UserContent;
-import productions.darthplagueis.contentvault.util.AppExecutors;
+import productions.darthplagueis.contentvault.util.app.AppExecutors;
 import productions.darthplagueis.contentvault.util.CurrentDateUtil;
 
 public class FileManager implements FileManagerCallBack {

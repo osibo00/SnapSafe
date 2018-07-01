@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="AppTheme.NoToolbar">
+    <style name="AppTheme" parent="AppTheme.Light.23"/>
+
+    <style name="AppTheme.Light.23" parent="AppTheme.Light">
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme.Dark.23" parent="AppTheme.Dark">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">@color/colorDarkPrimaryDark</item>
     </style>
 
 </resources>

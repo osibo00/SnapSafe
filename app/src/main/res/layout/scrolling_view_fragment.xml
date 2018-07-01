@@ -2,22 +2,30 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <View
+            android:id="@+id/scrolling_grid_background"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".3"
+            android:background="?attr/fabExtendedBackground" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/scrolling_recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/md_disabled_nav"
+            android:layout_height="0dp"
+            android:layout_weight=".7"
+            android:background="?android:attr/colorBackground"
             android:clipToPadding="false"
             android:elevation="@dimen/card_elevation_6"
-            android:scrollbars="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:scrollbars="vertical" />
 
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 </layout>

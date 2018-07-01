@@ -7,15 +7,15 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-@Entity(tableName = "content_album")
-public class ContentAlbum {
+@Entity(tableName = "content_folders")
+public class ContentFolder {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
 
     @NonNull
     @ColumnInfo(name = "file_directory")
-    private String albumName;
+    private String folderName;
 
     @NonNull
     @ColumnInfo(name = "directory_icon")
@@ -32,12 +32,12 @@ public class ContentAlbum {
     @ColumnInfo(name = "album_tag")
     private String albumTag;
 
-    public ContentAlbum(@NonNull String albumName,
-                        @NonNull String directoryIcon,
-                        @NonNull String creationDate,
-                        long latestTimestamp,
-                        @Nullable String albumTag) {
-        this.albumName = albumName;
+    public ContentFolder(@NonNull String folderName,
+                         @NonNull String directoryIcon,
+                         @NonNull String creationDate,
+                         long latestTimestamp,
+                         @Nullable String albumTag) {
+        this.folderName = folderName;
         this.directoryIcon = directoryIcon;
         this.creationDate = creationDate;
         this.latestTimestamp = latestTimestamp;
@@ -45,11 +45,11 @@ public class ContentAlbum {
     }
 
     @Ignore
-    public ContentAlbum(@NonNull String albumName,
-                        @NonNull String directoryIcon,
-                        @NonNull String creationDate,
-                        long latestTimestamp) {
-        this(albumName, directoryIcon, creationDate, latestTimestamp, null);
+    public ContentFolder(@NonNull String folderName,
+                         @NonNull String directoryIcon,
+                         @NonNull String creationDate,
+                         long latestTimestamp) {
+        this(folderName, directoryIcon, creationDate, latestTimestamp, null);
     }
 
     public void setId(int id) {
@@ -61,8 +61,8 @@ public class ContentAlbum {
     }
 
     @NonNull
-    public String getAlbumName() {
-        return albumName;
+    public String getFolderName() {
+        return folderName;
     }
 
     @NonNull

@@ -6,7 +6,8 @@ import android.arch.lifecycle.LiveData;
 import java.util.List;
 
 import productions.darthplagueis.contentvault.data.UserContent;
-import productions.darthplagueis.contentvault.util.AppExecutors;
+import productions.darthplagueis.contentvault.data.source.AppDatabase;
+import productions.darthplagueis.contentvault.util.app.AppExecutors;
 
 public class UserContentRepository implements UserContentCallBack {
 
@@ -17,7 +18,7 @@ public class UserContentRepository implements UserContentCallBack {
     private UserContentDao userContentDao;
 
     public UserContentRepository(Application application) {
-        UserContentDatabase db = UserContentDatabase.getDatabase(application);
+        AppDatabase db = AppDatabase.getDatabase(application);
         userContentDao = db.userContentDao();
         appExecutors = new AppExecutors();
         userContentList = userContentDao.getDescendingDateOrder();

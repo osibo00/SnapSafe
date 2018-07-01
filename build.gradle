@@ -48,4 +48,6 @@ ext {
     testEspressoVersion = '3.0.2'
     guavaVersion = '22.0-android'
     circleImageViewVersion = '2.2.0'
+    glideTransformationsVersion = '3.3.0'
+    gpuImageLibraryVersion = '1.4.1'
 }

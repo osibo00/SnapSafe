@@ -6,7 +6,7 @@
 
         <variable
             name="albumViewModel"
-            type="productions.darthplagueis.contentvault.photoalbums.ContentAlbumViewModel">
+            type="productions.darthplagueis.contentvault.photoalbums.ContentFolderViewModel">
 
         </variable>
     </data>
@@ -25,7 +25,7 @@
                 android:id="@+id/album_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
-                android:background="@android:color/white"
+                android:background="?attr/appBarPrimaryColor"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.AppBarLayout>

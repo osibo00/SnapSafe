@@ -9,10 +9,6 @@
     <string name="delete_dialog_message">Delete selected item(s)? This action cannot be undone.</string>
     <string name="dialog_yes">YES</string>
     <string name="dialog_no">NO</string>
-    <string name="sort_from_oldest_to_newest">Oldest to Newest</string>
-    <string name="sort_from_newest_to_oldest">Newest to Oldest</string>
-    <string name="sort_by_album">Album A to Z</string>
-    <string name="by_album_name_z_a">Album Z to A</string>
     <string name="user_album_photo">Content Album Photo</string>
     <string name="create_album">Create Album</string>
     <string name="create_new_album">Create New Album</string>
@@ -29,10 +25,10 @@
     <string name="favorites">Favorites</string>
     <string name="zero_selected">0 Selected</string>
     <string name="items_selected">\u0020Selected</string>
-    <string name="grid_span_of_two">Two Image Span</string>
-    <string name="grid_span_of_three">Three Image Span</string>
-    <string name="grid_span_of_four">Four Image Span</string>
-    <string name="grid_span_of_five">Five Image Span</string>
+    <string name="grid_span_of_two">Two Columns</string>
+    <string name="grid_span_of_three">Three Columns</string>
+    <string name="grid_span_of_four">Four Columns</string>
+    <string name="grid_span_of_five">Five Columns</string>
     <string name="make_copies">Make copies of selected item(s)?</string>
     <string name="title_activity_scroll_gallery">ScrollGalleryActivity</string>
     <string name="album_name_special_chars">Album name cannot contain special characters.</string>
@@ -43,4 +39,13 @@
     <string name="column_span">Column Span</string>
     <string name="settings">Settings</string>
     <string name="sort_by">Sort By</string>
+    <string name="theme">Theme</string>
+    <string name="light_theme">Light Theme</string>
+    <string name="dark_theme">Dark Theme</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="order">Order</string>
+    <string name="by_date">By Date</string>
+    <string name="by_folder">By Folder</string>
+    <string name="by_tag">By Tag</string>
 </resources>

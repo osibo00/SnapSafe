@@ -5,15 +5,21 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 
 import java.io.File;
@@ -25,6 +31,7 @@ import productions.darthplagueis.contentvault.SingleLiveEvent;
 import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.data.source.content.UserContentCallBack;
 import productions.darthplagueis.contentvault.data.source.content.UserContentRepository;
+import productions.darthplagueis.contentvault.util.ContextUtils;
 import productions.darthplagueis.contentvault.util.CurrentDateUtil;
 import productions.darthplagueis.contentvault.util.filemanager.FileManager;
 import productions.darthplagueis.contentvault.util.filemanager.FileManagerCallBack;
@@ -90,6 +97,13 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
         if (allowFabMovement) {
             if (isFabClosing) setAnimation(view, false);
         }
+    }
+
+    @BindingAdapter({"appPrimaryBackground"})
+    public static void setAppPrimaryBackground(View v, int resId) {
+        final Context context = v.getContext();
+        final int color = ContextUtils.resolveColor(context, resId, Color.BLACK);
+        v.setBackgroundColor(color);
     }
 
     @Override
