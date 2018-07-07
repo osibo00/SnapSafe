@@ -1,4 +1,4 @@
-package productions.darthplagueis.contentvault.photos;
+package productions.darthplagueis.contentvault.images;
 
 import android.animation.Animator;
 import android.app.Application;
@@ -12,19 +12,19 @@ import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.util.TypedValue;
+import android.util.SparseArray;
 import android.view.View;
+import android.widget.ImageView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import productions.darthplagueis.contentvault.R;
 import productions.darthplagueis.contentvault.SingleLiveEvent;
@@ -36,7 +36,7 @@ import productions.darthplagueis.contentvault.util.CurrentDateUtil;
 import productions.darthplagueis.contentvault.util.filemanager.FileManager;
 import productions.darthplagueis.contentvault.util.filemanager.FileManagerCallBack;
 
-import static productions.darthplagueis.contentvault.FragmentsActivity.PICK_IMAGE_CODE_TAG;
+import static productions.darthplagueis.contentvault.FragmentsActivity.PICK_IMAGE_CODE_REQUEST;
 
 public class UserContentViewModel extends AndroidViewModel implements FileManagerCallBack.SaveFileCallBack,
         FileManagerCallBack.CopyFileCallBack, UserContentCallBack.GetUserContentCountCallBack {
@@ -54,9 +54,13 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
 
     private List<UserContent> itemsSelectedList = new ArrayList<>(0);
 
-    private SingleLiveEvent<List<UserContent>> newAlbumPromptEvent = new SingleLiveEvent<>();
+    private SparseArray<ImageView> viewSparseArray = new SparseArray<>(0);
 
-    private SingleLiveEvent<String> newPhotoDetailEvent = new SingleLiveEvent<>();
+    private SparseArray<Map<ImageView, List<UserContent>>> sparseArray = new SparseArray<>(0);
+
+    private SingleLiveEvent<List<UserContent>> newFolderPromptEvent = new SingleLiveEvent<>();
+
+    private SingleLiveEvent<SparseArray<Map<ImageView, List<UserContent>>>> newPhotoDetailEvent = new SingleLiveEvent<>();
 
     private SingleLiveEvent<Void> newCarouselEvent = new SingleLiveEvent<>();
 
@@ -145,11 +149,11 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
         contentRepository.delete(userContent);
     }
 
-    public SingleLiveEvent<List<UserContent>> getNewAlbumPromptEvent() {
-        return newAlbumPromptEvent;
+    public SingleLiveEvent<List<UserContent>> getNewFolderPromptEvent() {
+        return newFolderPromptEvent;
     }
 
-    public SingleLiveEvent<String> getNewPhotoDetailEvent() {
+    public SingleLiveEvent<SparseArray<Map<ImageView, List<UserContent>>>> getNewPhotoDetailEvent() {
         return newPhotoDetailEvent;
     }
 
@@ -213,8 +217,12 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
         photoActionBarText.set(getApplication().getString(R.string.zero_selected));
     }
 
-    public void loadDetailView(UserContent userContent) {
-        newPhotoDetailEvent.setValue(userContent.getFilePath());
+    public void loadDetailView(int position, List<UserContent> userContents, ImageView imageView) {
+        Map<ImageView, List<UserContent>> userContentListMap = new HashMap<>();
+        userContentListMap.put(imageView, userContents);
+        sparseArray.clear();
+        sparseArray.append(position, userContentListMap);
+        newPhotoDetailEvent.setValue(sparseArray);
     }
 
     public void useCarouselView() {
@@ -273,7 +281,7 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
 
     public void presentAlbumPrompt() {
         if (itemsSelectedList.size() > 0) {
-            newAlbumPromptEvent.setValue(itemsSelectedList);
+            newFolderPromptEvent.setValue(itemsSelectedList);
             disableMultiSelection();
         }
     }
@@ -296,7 +304,7 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
     }
 
     public void handleActivityResult(int requestCode, Intent data) {
-        if (data != null && requestCode == PICK_IMAGE_CODE_TAG) {
+        if (data != null && requestCode == PICK_IMAGE_CODE_REQUEST) {
             ClipData clipData = data.getClipData();
             if (clipData != null) {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
@@ -316,7 +324,7 @@ public class UserContentViewModel extends AndroidViewModel implements FileManage
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(
                     (getApplication().getApplicationContext()).getContentResolver(), uri);
             fileManager.saveBitmapAsync(bitmap, this);
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

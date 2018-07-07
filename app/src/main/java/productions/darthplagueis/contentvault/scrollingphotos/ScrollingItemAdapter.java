@@ -62,7 +62,7 @@ public class ScrollingItemAdapter extends RecyclerView.Adapter<ScrollingItemAdap
         ScrollingViewHolder(ScrollingContentItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-            binding.scrollingCardView.setOnClickListener(this);
+            binding.scrollingItemLayout.setOnClickListener(this);
         }
 
         void onBind(UserContent userContent) {

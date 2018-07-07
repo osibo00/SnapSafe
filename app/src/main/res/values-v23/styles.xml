@@ -6,11 +6,13 @@
     <style name="AppTheme.Light.23" parent="AppTheme.Light">
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
     </style>
 
     <style name="AppTheme.Dark.23" parent="AppTheme.Dark">
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:statusBarColor">@color/colorDarkPrimaryDark</item>
+        <item name="android:navigationBarColor">@color/colorDarkPrimaryDark</item>
     </style>
 
 </resources>

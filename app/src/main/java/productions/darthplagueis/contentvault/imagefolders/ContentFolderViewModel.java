@@ -1,4 +1,4 @@
-package productions.darthplagueis.contentvault.photoalbums;
+package productions.darthplagueis.contentvault.imagefolders;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;

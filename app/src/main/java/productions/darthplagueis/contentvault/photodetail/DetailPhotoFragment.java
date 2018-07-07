@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +14,22 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import productions.darthplagueis.contentvault.BR;
 import productions.darthplagueis.contentvault.FragmentsActivity;
+import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.databinding.PhotoDetailFragmentBinding;
+import productions.darthplagueis.contentvault.scrollingphotos.ScrollingPageAdapter;
+import productions.darthplagueis.contentvault.scrollingphotos.ScrollingPhotoViewModel;
 
 
 public class DetailPhotoFragment extends Fragment {
 
     public static final String ARGUMENT_DETAIL_TAG = "ARGUMENT_DETAIL";
+    public static final String ARGUMENT_LIST_TAG = "ARGUMENT_LIST";
 
-    private DetailPhotoViewModel detailViewModel;
+    private ScrollingPhotoViewModel photoViewModel;
 
     private PhotoDetailFragmentBinding detailFragmentBinding;
 
@@ -31,12 +37,21 @@ public class DetailPhotoFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static DetailPhotoFragment newInstance(@NonNull String filePath) {
+    public static DetailPhotoFragment newInstance(int position, ArrayList<UserContent> userContents) {
         Bundle arguments = new Bundle();
-        arguments.putString(ARGUMENT_DETAIL_TAG, filePath);
+        arguments.putInt(ARGUMENT_DETAIL_TAG, position);
+        arguments.putParcelableArrayList(ARGUMENT_LIST_TAG, userContents);
         DetailPhotoFragment fragment = new DetailPhotoFragment();
         fragment.setArguments(arguments);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        postponeEnterTransition();
+        setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(android.R.transition.move));
+        setSharedElementReturnTransition(null);
     }
 
     @Override
@@ -44,23 +59,21 @@ public class DetailPhotoFragment extends Fragment {
                              Bundle savedInstanceState) {
         detailFragmentBinding = PhotoDetailFragmentBinding.inflate(
                 inflater, container, false);
-        setImmersiveMode();
-        detailViewModel = FragmentsActivity.obtainDetailViewModel(getActivity());
-        detailFragmentBinding.setVariable(BR.detailViewModel, detailViewModel);
+        //setImmersiveMode();
+        photoViewModel = FragmentsActivity.obtainScrollingViewModel(getActivity());
+        detailFragmentBinding.setVariable(BR.detailViewModel, photoViewModel);
 
         return detailFragmentBinding.getRoot();
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        String photoFilePath = getArguments() != null ? getArguments().getString(ARGUMENT_DETAIL_TAG) : null;
-        if (photoFilePath != null) {
-            Glide.with(detailFragmentBinding.getRoot())
-                    .load(new File(photoFilePath))
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(detailFragmentBinding.detailImageView);
-        }
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        int photoFilePath = getArguments().getInt(ARGUMENT_DETAIL_TAG);
+        ArrayList<UserContent> userContents = getArguments().getParcelableArrayList(ARGUMENT_LIST_TAG);
+        ScrollingPageAdapter pageAdapter = new ScrollingPageAdapter(getChildFragmentManager(), photoViewModel, userContents);
+        detailFragmentBinding.scrollingViewPager.setAdapter(pageAdapter);
+        detailFragmentBinding.scrollingViewPager.setCurrentItem(photoFilePath);
     }
 
     private void setImmersiveMode() {

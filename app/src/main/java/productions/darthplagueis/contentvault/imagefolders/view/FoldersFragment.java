@@ -1,4 +1,4 @@
-package productions.darthplagueis.contentvault.photoalbums.view;
+package productions.darthplagueis.contentvault.imagefolders.view;
 
 
 import android.content.Context;
@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 
 import productions.darthplagueis.contentvault.FragmentsActivity;
 import productions.darthplagueis.contentvault.databinding.AlbumsFragmentBinding;
-import productions.darthplagueis.contentvault.photoalbums.ContentFolderAdapter;
-import productions.darthplagueis.contentvault.photoalbums.ContentFolderViewModel;
+import productions.darthplagueis.contentvault.imagefolders.ContentFolderAdapter;
+import productions.darthplagueis.contentvault.imagefolders.ContentFolderViewModel;
 import productions.darthplagueis.contentvault.util.DimensionsUtil;
 import productions.darthplagueis.contentvault.util.recyclerview.GridSpacingItemDecoration;
 
@@ -42,8 +42,10 @@ public class FoldersFragment extends Fragment {
                              Bundle savedInstanceState) {
         albumsFragmentBinding = AlbumsFragmentBinding.inflate(
                 inflater, container, false);
-        albumViewModel = FragmentsActivity.obtainAlbumViewModel(getActivity());
-        albumsFragmentBinding.setAlbumViewModel(albumViewModel);
+        if (getActivity() != null) {
+            albumViewModel = FragmentsActivity.obtainAlbumViewModel(getActivity());
+            albumsFragmentBinding.setAlbumViewModel(albumViewModel);
+        }
         return albumsFragmentBinding.getRoot();
     }
 
@@ -52,13 +54,13 @@ public class FoldersFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         context = getContext();
 
-        ContentFolderAdapter albumAdapter = new ContentFolderAdapter(albumViewModel);
-        albumViewModel.getDescDateList().observe(this, albumAdapter::setContentFolderList);
+        ContentFolderAdapter folderAdapter = new ContentFolderAdapter(albumViewModel);
+        albumViewModel.getDescDateList().observe(this, folderAdapter::setContentFolderList);
 
         RecyclerView recyclerView = albumsFragmentBinding.albumRecyclerView;
-        recyclerView.setAdapter(albumAdapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2,
-                DimensionsUtil.dpToPx(context, 12), true));
+        recyclerView.setAdapter(folderAdapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(
+                2, 0, false));
     }
 }

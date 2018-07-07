@@ -16,7 +16,8 @@ public class ScrollingPageAdapter extends FragmentStatePagerAdapter {
 
     private final ScrollingPhotoViewModel photoViewModel;
 
-    public ScrollingPageAdapter(FragmentManager fm, ScrollingPhotoViewModel photoViewModel, List<UserContent> userContents) {
+    public ScrollingPageAdapter(FragmentManager fm, ScrollingPhotoViewModel photoViewModel,
+                                List<UserContent> userContents) {
         super(fm);
         this.userContentList = userContents;
         this.photoViewModel = photoViewModel;
@@ -26,7 +27,9 @@ public class ScrollingPageAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Fragment fragment = null;
         if (position < userContentList.size()) {
-            fragment = ScrollingPhotoFragment.newInstance(userContentList.get(position).getFilePath());
+            UserContent userContent = userContentList.get(position);
+            fragment = ScrollingPhotoFragment.newInstance(
+                    userContent, userContent.getFileName());
             photoViewModel.currentPageAdapterPosition(position);
         }
         return fragment;

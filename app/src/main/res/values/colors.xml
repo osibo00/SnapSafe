@@ -4,19 +4,14 @@
     <color name="colorPrimaryDark">#920000</color>
     <color name="colorPrimaryLight">#ff624f</color>
 
-    <color name="colorAccent">#1ee9a5</color>
-    <color name="colorAccentDark">#00d97b</color>
-    <color name="colorAccentLight">#6dffd7</color>
-
     <color name="colorDarkPrimary">#344955</color>
     <color name="colorDarkPrimaryDark">#232f34</color>
     <color name="colorDarkPrimaryAccent">#4a6572</color>
+    <color name="colorDarkSecondary">#f9aa33</color>
 
     <color name="colorSurface">#ffffff</color>
     <color name="colorSurfaceDark">#f5f5f5</color>
     <color name="colorSurfaceLight">#ffffff</color>
-
-    <color name="colorDarkSurface">#000000</color>
 
     <color name="md_blacktext_high_emphasis">#de000000</color>
     <color name="md_blacktext_medium_emphasis">#99000000</color>
@@ -44,11 +39,17 @@
     <color name="white38alpha">#61ffffff</color>
     <color name="white25alpha">#40ffffff</color>
 
-    <color name="light25alpha">#40cb2b25</color>
-    <color name="dark25alpha">#40f9aa33</color>
+    <color name="light45alpha">#73cb2b25</color>
+    <color name="light60alpha">#99cb2b25</color>
+    <color name="light85alpha">#d9cb2b25</color>
+    <color name="dark45alpha">#73f9aa33</color>
+    <color name="dark60alpha">#99f9aa33</color>
+    <color name="dark85alpha">#d9f9aa33</color>
 
     <color name="colorDarkGrey">#606060</color>
     <color name="colorLightGrey">#e0e0e0</color>
 
-    <color name="colorDarkSecondary">#f9aa33</color>
+    <color name="colorAccent">#1ee9a5</color>
+    <color name="colorAccentDark">#00d97b</color>
+    <color name="colorAccentLight">#6dffd7</color>
 </resources>

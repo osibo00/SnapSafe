@@ -1,4 +1,4 @@
-package productions.darthplagueis.contentvault.photoalbums.view.dialogs;
+package productions.darthplagueis.contentvault.imagefolders.view.dialogs;
 
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
@@ -26,7 +26,7 @@ import productions.darthplagueis.contentvault.SnapSafeApplication;
 import productions.darthplagueis.contentvault.ViewModelFactory;
 import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.databinding.CreateFolderDialogBinding;
-import productions.darthplagueis.contentvault.photoalbums.ContentFolderViewModel;
+import productions.darthplagueis.contentvault.imagefolders.ContentFolderViewModel;
 import productions.darthplagueis.contentvault.util.filemanager.FileManager;
 import productions.darthplagueis.contentvault.util.theme.ResourcesUtil;
 import productions.darthplagueis.contentvault.util.theme.ThemeType;

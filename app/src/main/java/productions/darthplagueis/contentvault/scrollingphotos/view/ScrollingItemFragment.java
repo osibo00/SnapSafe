@@ -1,5 +1,6 @@
 package productions.darthplagueis.contentvault.scrollingphotos.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.databinding.ScrollingViewFragmentBinding;
 import productions.darthplagueis.contentvault.scrollingphotos.ScrollingItemAdapter;
 import productions.darthplagueis.contentvault.scrollingphotos.ScrollingPhotoViewModel;
+import productions.darthplagueis.contentvault.util.DimensionsUtil;
 import productions.darthplagueis.contentvault.util.recyclerview.GridSpacingItemDecoration;
 
 public class ScrollingItemFragment extends Fragment {
@@ -27,6 +29,8 @@ public class ScrollingItemFragment extends Fragment {
     private ScrollingPhotoViewModel photoViewModel;
 
     private ScrollingViewFragmentBinding viewFragmentBinding;
+
+    private Context context;
 
     public static ScrollingItemFragment newInstance(List<UserContent> userContents) {
         ScrollingItemFragment fragment = new ScrollingItemFragment();
@@ -52,12 +56,15 @@ public class ScrollingItemFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        context = getContext();
+
         ScrollingItemAdapter viewAdapter = new ScrollingItemAdapter(photoViewModel);
         if (userContentList != null) viewAdapter.setUserContentList(userContentList);
         RecyclerView recyclerView = viewFragmentBinding.scrollingRecyclerView;
         recyclerView.setAdapter(viewAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(3, 0, false));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(
+                3, DimensionsUtil.dpToPx(context, 4), false));
         photoViewModel.getNewPagerAdapterPositionEvent().observe(this, recyclerView::smoothScrollToPosition);
     }
 }

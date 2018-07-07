@@ -4,11 +4,13 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 @Entity(tableName = "user_content")
-public class UserContent {
+public class UserContent implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -74,6 +76,31 @@ public class UserContent {
         this(fileName, importDate, timeStamp, filePath, fileDirectory, contentTag, false);
     }
 
+    @Ignore
+    protected UserContent(Parcel in) {
+        id = in.readInt();
+        fileName = in.readString();
+        importDate = in.readString();
+        timeStamp = in.readLong();
+        filePath = in.readString();
+        fileDirectory = in.readString();
+        contentTag = in.readString();
+        isFavorite = in.readByte() != 0;
+    }
+
+    @Ignore
+    public static final Creator<UserContent> CREATOR = new Creator<UserContent>() {
+        @Override
+        public UserContent createFromParcel(Parcel in) {
+            return new UserContent(in);
+        }
+
+        @Override
+        public UserContent[] newArray(int size) {
+            return new UserContent[size];
+        }
+    };
+
     public void setId(int id) {
         this.id = id;
     }
@@ -129,6 +156,25 @@ public class UserContent {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
+    }
+
+    @Ignore
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Ignore
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(fileName);
+        dest.writeString(importDate);
+        dest.writeLong(timeStamp);
+        dest.writeString(filePath);
+        dest.writeString(fileDirectory);
+        dest.writeString(contentTag);
+        dest.writeByte((byte) (isFavorite ? 1 : 0));
     }
 }
 

@@ -5,8 +5,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true"
         android:orientation="vertical"
         android:weightSum="1">
 
@@ -14,17 +12,20 @@
             android:id="@+id/scrolling_grid_background"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight=".3"
-            android:background="?attr/fabExtendedBackground" />
+            android:layout_weight=".6"
+            android:background="@drawable/gradient_background"
+            android:clickable="true"
+            android:focusable="true" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/scrolling_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight=".7"
-            android:background="?android:attr/colorBackground"
-            android:clipToPadding="false"
-            android:elevation="@dimen/card_elevation_6"
+            android:layout_weight=".4"
+            android:background="@drawable/round_corners_background"
+            android:clipToPadding="true"
+            android:elevation="@dimen/bottom_nav_elevation"
+            android:padding="@dimen/childView_margin"
             android:scrollbars="vertical" />
 
     </LinearLayout>
