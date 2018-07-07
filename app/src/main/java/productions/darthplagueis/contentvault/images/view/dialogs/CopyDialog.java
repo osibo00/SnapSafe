@@ -1,4 +1,4 @@
-package productions.darthplagueis.contentvault.photos.view.dialogs;
+package productions.darthplagueis.contentvault.images.view.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -13,16 +13,16 @@ import java.util.Objects;
 
 import productions.darthplagueis.contentvault.R;
 import productions.darthplagueis.contentvault.SnapSafeApplication;
-import productions.darthplagueis.contentvault.photos.UserContentViewModel;
+import productions.darthplagueis.contentvault.images.UserContentViewModel;
 import productions.darthplagueis.contentvault.util.theme.ResourcesUtil;
 import productions.darthplagueis.contentvault.util.theme.ThemeType;
 
-public class DeleteDialog extends DialogFragment {
+public class CopyDialog extends DialogFragment {
 
     private UserContentViewModel contentViewModel;
 
-    public static DeleteDialog newInstance(UserContentViewModel viewModel) {
-        DeleteDialog dialog = new DeleteDialog();
+    public static CopyDialog newInstance(UserContentViewModel viewModel) {
+        CopyDialog dialog = new CopyDialog();
         dialog.contentViewModel = viewModel;
         return dialog;
     }
@@ -33,18 +33,18 @@ public class DeleteDialog extends DialogFragment {
         Context context = Objects.requireNonNull(getContext(), "Context must not be null.");
         Drawable drawable;
         if (SnapSafeApplication.appTheme == ThemeType.APP_THEME_LIGHT) {
-            drawable = ResourcesUtil.getColorIcon(context, R.drawable.ic_delete_black_24dp, R.color.colorPrimary);
+            drawable = ResourcesUtil.getColorIcon(context, R.drawable.ic_content_copy_black_24dp, R.color.colorPrimary);
         } else {
-            drawable = ResourcesUtil.getColorIcon(context, R.drawable.ic_delete_black_24dp, R.color.colorDarkSecondary);
+            drawable = ResourcesUtil.getColorIcon(context, R.drawable.ic_content_copy_black_24dp, R.color.colorDarkSecondary);
         }
         AlertDialog alertDialog = new AlertDialog.Builder(context)
-                .setTitle(ResourcesUtil.getDialogTitle(context, R.string.delete))
-                .setMessage(R.string.delete_dialog_message)
+                .setTitle(ResourcesUtil.getDialogTitle(context, R.string.copy))
+                .setMessage(R.string.make_copies)
                 .setIcon(drawable)
                 .setPositiveButton(R.string.dialog_yes, null)
                 .setNegativeButton(R.string.dialog_cancel, null)
                 .create();
-        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCanceledOnTouchOutside(true);
         alertDialog.setOnShowListener(dialog -> onDialogShow(alertDialog));
         return alertDialog;
     }
@@ -57,8 +57,7 @@ public class DeleteDialog extends DialogFragment {
     }
 
     private void onYesCLicked() {
-        contentViewModel.deleteSelected();
+        contentViewModel.copySelected();
         dismiss();
     }
 }
-

@@ -9,7 +9,7 @@
 
         <variable
             name="contentViewModel"
-            type="productions.darthplagueis.contentvault.photos.UserContentViewModel" />
+            type="productions.darthplagueis.contentvault.images.UserContentViewModel" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -53,7 +53,7 @@
             android:id="@+id/fab_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/fabExtendedBackground"
+            android:background="@drawable/gradient_background"
             android:onClick="@{() -> contentViewModel.closeFab()}"
             android:visibility="@{contentViewModel.isFabExtending ? View.VISIBLE : View.GONE}"
             tools:visibility="gone" />

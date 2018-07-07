@@ -1,6 +1,7 @@
 package productions.darthplagueis.contentvault;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -19,6 +20,9 @@ import productions.darthplagueis.contentvault.util.theme.ThemeUtil;
 
 public class ScrollGalleryActivity extends AppCompatActivity implements ScrollingContentNavigator {
 
+    private String viewTransitionName;
+    private int contentId;
+
     private ViewPager scrollingViewPager;
 
     private ScrollingItemFragment itemFragment;
@@ -30,6 +34,13 @@ public class ScrollGalleryActivity extends AppCompatActivity implements Scrollin
         super.onCreate(savedInstanceState);
         ThemeUtil.onActivityCreateSetTheme(this);
         setContentView(R.layout.activity_scroll_gallery);
+        supportPostponeEnterTransition();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            viewTransitionName = extras.getString(FragmentsActivity.CONTENT_IMAGE_TRANSITION_NAME);
+            contentId = extras.getInt(FragmentsActivity.USER_CONTENT_ID);
+        }
 
         Toolbar toolbar = findViewById(R.id.scroll_gallery_toolbar);
         setSupportActionBar(toolbar);
@@ -56,10 +67,16 @@ public class ScrollGalleryActivity extends AppCompatActivity implements Scrollin
 
     @Override
     public void onContentRetrieved(List<UserContent> userContents) {
-        ScrollingPageAdapter scrollingPageAdapter =
-                new ScrollingPageAdapter(getSupportFragmentManager(), photoViewModel, userContents);
-        scrollingViewPager.setAdapter(scrollingPageAdapter);
-        setupScrollingItemFragment(userContents);
+//        ScrollingPageAdapter scrollingPageAdapter =
+//                new ScrollingPageAdapter(getSupportFragmentManager(), photoViewModel,
+//                                userContents, viewTransitionName);
+//        scrollingViewPager.setAdapter(scrollingPageAdapter);
+//        for (int i = 0; i < userContents.size(); i++) {
+//            if (userContents.get(i).getId() == contentId) {
+//                scrollingViewPager.setCurrentItem(i);
+//            }
+//        }
+        //setupScrollingItemFragment(userContents);
     }
 
     @Override

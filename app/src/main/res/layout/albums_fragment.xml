@@ -6,7 +6,7 @@
 
         <variable
             name="albumViewModel"
-            type="productions.darthplagueis.contentvault.photoalbums.ContentFolderViewModel">
+            type="productions.darthplagueis.contentvault.imagefolders.ContentFolderViewModel">
 
         </variable>
     </data>

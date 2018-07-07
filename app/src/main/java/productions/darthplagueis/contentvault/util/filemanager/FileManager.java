@@ -211,8 +211,8 @@ public class FileManager implements FileManagerCallBack {
             File file = new File(userContent.getFilePath());
             try {
                 boolean isDeleted = file.delete();
-                Log.i("FileManager", "deleteFileAsync: " + isDeleted);
-            } catch (Exception e) {
+                Log.i("FileManager", "deleteFileAsync: " + userContent.getFilePath() + " " + isDeleted);
+            } catch (SecurityException e) {
                 e.printStackTrace();
             }
         };

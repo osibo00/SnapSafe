@@ -24,9 +24,9 @@ public class SharedPrefsUtil {
                 .getString(SnapSafeApplication.SPAN_PREF, LayoutSpanType.GRID_SPAN_FOUR.name());
     }
 
-    public static void saveSpanPreference(Context context, String layoutManagerType) {
+    public static void saveSpanPreference(Context context, String layoutSpanType) {
         context.getSharedPreferences(SnapSafeApplication.SHARED_PREFS, Context.MODE_PRIVATE)
-                .edit().putString(SnapSafeApplication.SPAN_PREF, layoutManagerType)
+                .edit().putString(SnapSafeApplication.SPAN_PREF, layoutSpanType)
                 .apply();
     }
 

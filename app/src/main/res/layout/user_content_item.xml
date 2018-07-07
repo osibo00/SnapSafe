@@ -9,7 +9,7 @@
 
         <variable
             name="itemViewModel"
-            type="productions.darthplagueis.contentvault.photos.UserContentViewModel" />
+            type="productions.darthplagueis.contentvault.images.UserContentViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout

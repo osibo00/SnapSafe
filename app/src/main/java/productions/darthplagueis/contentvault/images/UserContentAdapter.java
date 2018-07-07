@@ -1,7 +1,8 @@
-package productions.darthplagueis.contentvault.photos;
+package productions.darthplagueis.contentvault.images;
 
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -9,9 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.util.List;
@@ -88,6 +87,7 @@ public class UserContentAdapter extends RecyclerView.Adapter<UserContentAdapter.
         }
 
         void onBind(UserContent userContent) {
+            ViewCompat.setTransitionName(binding.photoImageView, userContent.getFileName());
             Glide.with(binding.getRoot())
                     .load(new File(userContent.getFilePath()))
                     .thumbnail(0.25f)
@@ -148,7 +148,7 @@ public class UserContentAdapter extends RecyclerView.Adapter<UserContentAdapter.
                 contentViewModel.totalItemsSelected(amountSelected);
                 contentViewModel.contentSelected(userContentList.get(position));
             } else {
-                contentViewModel.loadDetailView(userContentList.get(position));
+                contentViewModel.loadDetailView(position, userContentList, binding.photoImageView);
             }
         }
     }

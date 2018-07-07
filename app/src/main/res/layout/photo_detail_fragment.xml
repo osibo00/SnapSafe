@@ -8,7 +8,7 @@
 
         <variable
             name="detailViewModel"
-            type="productions.darthplagueis.contentvault.photodetail.DetailPhotoViewModel" />
+            type="productions.darthplagueis.contentvault.scrollingphotos.ScrollingPhotoViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -19,21 +19,21 @@
         android:fitsSystemWindows="true"
         android:focusable="true">
 
-        <ImageView
-            android:id="@+id/detail_imageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/snapsafe_image"
-            android:scaleType="fitCenter" />
-
         <ImageButton
             android:id="@+id/detail_back_btn"
             style="@style/action_toolbar_button"
             android:layout_width="@dimen/md_icon_button_margin"
             android:layout_height="@dimen/md_icon_button_margin"
-            android:onClick="@{() -> detailViewModel.onBackButtonPressed()}"
-            android:padding="@dimen/circle_image_margins"
             android:src="@drawable/ic_arrow_back_white_24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/scrolling_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

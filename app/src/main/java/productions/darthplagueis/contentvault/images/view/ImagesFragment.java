@@ -1,4 +1,4 @@
-package productions.darthplagueis.contentvault.photos.view;
+package productions.darthplagueis.contentvault.images.view;
 
 
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,23 +25,23 @@ import productions.darthplagueis.contentvault.R;
 import productions.darthplagueis.contentvault.SnapSafeApplication;
 import productions.darthplagueis.contentvault.data.UserContent;
 import productions.darthplagueis.contentvault.databinding.PhotosFragmentBinding;
-import productions.darthplagueis.contentvault.photos.UserContentAdapter;
+import productions.darthplagueis.contentvault.images.UserContentAdapter;
 import productions.darthplagueis.contentvault.util.SortingType;
 import productions.darthplagueis.contentvault.util.app.SharedPrefsUtil;
 import productions.darthplagueis.contentvault.util.theme.ResourcesUtil;
 import productions.darthplagueis.contentvault.util.theme.ThemeType;
 import productions.darthplagueis.contentvault.util.theme.ThemeUtil;
 import productions.darthplagueis.contentvault.util.recyclerview.LayoutSpanType;
-import productions.darthplagueis.contentvault.photos.UserContentViewModel;
-import productions.darthplagueis.contentvault.photos.view.dialogs.CopyDialog;
-import productions.darthplagueis.contentvault.photoalbums.view.dialogs.CreateFolderDialog;
-import productions.darthplagueis.contentvault.photos.view.dialogs.DeleteDialog;
+import productions.darthplagueis.contentvault.images.UserContentViewModel;
+import productions.darthplagueis.contentvault.images.view.dialogs.CopyDialog;
+import productions.darthplagueis.contentvault.imagefolders.view.dialogs.CreateFolderDialog;
+import productions.darthplagueis.contentvault.images.view.dialogs.DeleteDialog;
 import productions.darthplagueis.contentvault.util.DimensionsUtil;
 import productions.darthplagueis.contentvault.util.theme.StatusBarColorUtil;
 import productions.darthplagueis.contentvault.util.recyclerview.GridSpacingItemDecoration;
 
 
-public class PhotosFragment extends Fragment {
+public class ImagesFragment extends Fragment {
 
     public static final String DELETE_DIALOG_TAG = "DELETE_DIALOG_TAG";
     public static final String NEW_ALBUM_TAG = "NEW_ALBUM_TAG";
@@ -55,16 +56,23 @@ public class PhotosFragment extends Fragment {
 
     private PhotosFragmentBinding photosFragmentBinding;
 
+    private FragmentActivity activity;
     private Context context;
 
-    private FragmentActivity activity;
-
-    public static PhotosFragment newInstance() {
-        return new PhotosFragment();
+    public static ImagesFragment newInstance() {
+        return new ImagesFragment();
     }
 
-    public PhotosFragment() {
+    public ImagesFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        contentViewModel = FragmentsActivity.obtainContentViewModel(getActivity());
+        contentAdapter = new UserContentAdapter(contentViewModel);
+        setImageSort();
     }
 
     @Override
@@ -73,7 +81,6 @@ public class PhotosFragment extends Fragment {
         photosFragmentBinding = PhotosFragmentBinding.inflate(inflater, container, false);
         activity = getActivity();
         if (activity != null) {
-            contentViewModel = FragmentsActivity.obtainContentViewModel(activity);
             photosFragmentBinding.setContentViewModel(contentViewModel);
             photosFragmentBinding.photoActionBar.setVariable(BR.toolBarViewModel, contentViewModel);
             photosFragmentBinding.photoActionBar.setVariable(BR.toolBarBackgroundColor, R.attr.appBarPrimaryColor);
@@ -85,9 +92,6 @@ public class PhotosFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         context = getContext();
-
-        contentAdapter = new UserContentAdapter(contentViewModel);
-        setImageSort();
 
         contentViewModel.getNewMultiSelectionEvent().observe(this, aVoid -> {
             contentAdapter.enableMultiSelection();
@@ -110,7 +114,7 @@ public class PhotosFragment extends Fragment {
 
         contentViewModel.getNewCopyPromptEvent().observe(this, aVoid -> createCopyDialog());
 
-        contentViewModel.getNewAlbumPromptEvent().observe(this, this::createNewAlbumDialog);
+        contentViewModel.getNewFolderPromptEvent().observe(this, this::createNewAlbumDialog);
 
         contentViewModel.getNewSortingEvent().observe(this, aVoid -> createSortingPopup());
 
@@ -122,31 +126,33 @@ public class PhotosFragment extends Fragment {
     }
 
     private void setImageSort() {
-        SortingType sortOrder = SortingType.valueOf(SharedPrefsUtil.getSortOrderPreference(context));
-        SortingType sortType = SortingType.valueOf(SharedPrefsUtil.getSortPreference(context));
-        if (sortOrder == SortingType.SORT_ASCENDING) {
-            switch (sortType) {
-                default:
-                case SORT_DATE:
-                    getAscDateList();
-                    break;
-                case SORT_FOLDER:
-                    getFolderAToZList();
-                    break;
-                case SORT_TAG:
-                    break;
-            }
-        } else {
-            switch (sortType) {
-                default:
-                case SORT_DATE:
-                    getDescDateList();
-                    break;
-                case SORT_FOLDER:
-                    getFolderZToAList();
-                    break;
-                case SORT_TAG:
-                    break;
+        if (getActivity() != null) {
+            SortingType sortOrder = SortingType.valueOf(SharedPrefsUtil.getSortOrderPreference(getActivity()));
+            SortingType sortType = SortingType.valueOf(SharedPrefsUtil.getSortPreference(getActivity()));
+            if (sortOrder == SortingType.SORT_ASCENDING) {
+                switch (sortType) {
+                    default:
+                    case SORT_DATE:
+                        getAscDateList();
+                        break;
+                    case SORT_FOLDER:
+                        getFolderAToZList();
+                        break;
+                    case SORT_TAG:
+                        break;
+                }
+            } else {
+                switch (sortType) {
+                    default:
+                    case SORT_DATE:
+                        getDescDateList();
+                        break;
+                    case SORT_FOLDER:
+                        getFolderZToAList();
+                        break;
+                    case SORT_TAG:
+                        break;
+                }
             }
         }
     }

@@ -5,9 +5,9 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import productions.darthplagueis.contentvault.photoalbums.ContentFolderViewModel;
+import productions.darthplagueis.contentvault.imagefolders.ContentFolderViewModel;
 import productions.darthplagueis.contentvault.photodetail.DetailPhotoViewModel;
-import productions.darthplagueis.contentvault.photos.UserContentViewModel;
+import productions.darthplagueis.contentvault.images.UserContentViewModel;
 import productions.darthplagueis.contentvault.scrollingphotos.ScrollingPhotoViewModel;
 
 public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {

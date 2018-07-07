@@ -9,6 +9,8 @@
     <attr name="iconColor" format="color" />
     <attr name="actionIconColor" format="color" />
     <attr name="fabColor" format="color" />
-    <attr name="fabExtendedBackground" format="color" />
+    <attr name="gradientStartColor" format="color"/>
+    <attr name="gradientCenterColor" format="color"/>
+    <attr name="gradientEndColor" format="color"/>
 
 </resources>
